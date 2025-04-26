@@ -31,6 +31,7 @@ struct EmotionStatsView: View {
                 Text(currentDate.yearMonthString())
                     .font(.custom("BMYEONSUNG-OTF", size: 26))
                     .fontWeight(.semibold)
+                    .foregroundColor(.black)
 
                 Button(action: { changeMonth(by: 1) }) {
                     Image(systemName: "chevron.right")
@@ -57,13 +58,29 @@ struct EmotionStatsView: View {
                 .foregroundStyle(stat.emotion.color)
             }
             .chartXAxis {
-                AxisMarks { value in
-                    if let emotionString = value.as(String.self),
-                       let emotion = EmotionType(rawValue: emotionString) {
-                        AxisValueLabel {
+                AxisMarks(preset: .aligned) { value in
+                    AxisGridLine()
+                        .foregroundStyle(Color.gray.opacity(0.4)) // 가로선 색상 지정
+                    AxisTick()
+                    AxisValueLabel {
+                        if let emotionString = value.as(String.self),
+                           let emotion = EmotionType(rawValue: emotionString) {
                             Text(emotion.rawValue)
                                 .font(.custom("BMYEONSUNG-OTF", size: 26))
+                                .foregroundColor(.black)
                         }
+                    }
+                }
+            }
+            .chartYAxis {
+                AxisMarks(preset: .extended) { value in
+                    AxisGridLine()
+                        .foregroundStyle(Color.gray.opacity(0.7)) // 세로선 색상 지정
+                    AxisTick()
+                    AxisValueLabel{
+                        Text("\(value.as(Int.self) ?? 0)")
+                            .font(.custom("BMYEONSUNG-OTF", size: 14))
+                            .foregroundColor(.black.opacity(0.7))
                     }
                 }
             }
@@ -75,6 +92,7 @@ struct EmotionStatsView: View {
                 .font(.custom("BMYEONSUNG-OTF", size: 22))
                 .padding()
                 .multilineTextAlignment(.center)
+                .foregroundColor(.black)
 
             Spacer()
         }
@@ -87,4 +105,3 @@ struct EmotionStatsView: View {
         }
     }
 }
-

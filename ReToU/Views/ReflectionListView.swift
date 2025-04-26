@@ -47,7 +47,7 @@ struct ReflectionListView: View {
                 Text("그날의 너")
                     .font(.custom("BMYEONSUNG-OTF", size: 40))
                     .fontWeight(.bold)
-                    .foregroundColor(.black.opacity(0.7))
+                    .foregroundColor(.black)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .center)
                     .background(Color(hex: "#FFF9EC"))
@@ -99,7 +99,7 @@ struct ReflectionListView: View {
 
                                         Text(reflection.content.components(separatedBy: "\n").first ?? "")
                                             .font(.custom("BMYEONSUNG-OTF", size: 18))
-                                            .foregroundColor(Color(.darkGray))
+                                            .foregroundColor(.black)
                                             .lineLimit(1)
                                     }
 
@@ -110,6 +110,7 @@ struct ReflectionListView: View {
                                             Spacer()
                                             Text(reflection.emotion)
                                                 .font(.custom("BMYEONSUNG-OTF", size: 34))
+                                                .foregroundColor(.black)
                                         }
                                         
                                     }
