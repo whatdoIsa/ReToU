@@ -11,6 +11,7 @@ struct ReflectionDetailView: View {
         NavigationStack {
             ZStack(alignment: .topTrailing) {
             Color(hex: "#FFF9EC").ignoresSafeArea()
+                .colorScheme(.light)
 
             VStack(spacing: 28) {
                 Text("그날의 넌")
@@ -20,7 +21,7 @@ struct ReflectionDetailView: View {
                 
                 Text("그날의 나를 다시 돌아보는 중이에요")
                     .font(.custom("BMYEONSUNG-OTF", size: 28))
-                    .foregroundColor(.gray)
+                    .foregroundColor(.black)
                 
                 ZStack(alignment: .topLeading) {
                     RoundedRectangle(cornerRadius: 16)
@@ -41,7 +42,7 @@ struct ReflectionDetailView: View {
 
                         Text(reflection.content)
                             .font(.custom("BMYEONSUNG-OTF", size: 22))
-                            .foregroundColor(Color(.darkGray))
+                            .foregroundColor(.black)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.vertical, 20)

@@ -49,21 +49,23 @@ struct ReflectionWriteView: View {
                     VStack(alignment: .leading, spacing: 14) {
                         Text("예시) 오늘 하루는 어땠나요? \n       코드에 오류가 너무 많아서 찾는데 오래 걸렸어요")
                             .font(.custom("BMYEONSUNG-OTF", size: 18))
-                            .foregroundColor(.gray)
+                            .foregroundColor(.gray.opacity(0.7))
                         Text("예시) 오늘 힘들었거나 행복했던 일이 있었나요? \n       여행을 가서 너무 설레요!!")
                             .font(.custom("BMYEONSUNG-OTF", size: 18))
-                            .foregroundColor(.gray)
+                            .foregroundColor(.gray.opacity(0.7))
 
                         ScrollView {
                             TextEditor(text: $reflectionText)
                                 .frame(height: 200)
                                 .padding(8)
-                                .background(Color.white)
+                                .background(Color(hex: "#FFF9EC"))
+                                .foregroundColor(.black)
+                                .colorScheme(.light) // 강제 라이트모드 적용
                         }
                         .frame(height: 200)
                     }
                     .padding()
-                    .background(Color(hex: "#FFFDF3"))
+                    .background(Color(hex: "#FFF9EC"))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
