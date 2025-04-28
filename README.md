@@ -81,9 +81,7 @@ A. 현재는 로컬 저장 방식만 제공되며,
 
 ## 📲 다운로드 링크
 
-👉 [App Store에서 받기 (예정)](https://apps.apple.com/...)
-
-※ 앱 등록 완료 후 링크를 교체해주세요.
+👉 [App Store에서 받기](https://apps.apple.com/kr/app/re-tou/id6745058969)
 
 ---
 
