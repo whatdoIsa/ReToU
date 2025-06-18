@@ -1,0 +1,58 @@
+/* 
+  Localizable.strings
+  ReToU
+
+  Created by Dean on 4/30/25.
+  
+*/
+
+//Launch
+"launch_title" = "Today’s You";
+"launch_subtitle" = "A time to honestly reflect on your day";
+"passwords" = "Enter the passwords";
+"enter_passwords" = "Enter";
+
+//Write
+"write_title" = "How are you today?";
+"write_date_format" = "MMMM d, yyyy";
+"write_example_1" = "e.g.) How was your day?";
+"write_example_2" = "e.g.) Was there anything hard or happy today?";
+"write_example_answer_1" = "There were so many bugs in the code, it took me a long time to fix them.";
+"write_example_answer_2" = "I'm going on a trip and I’m so excited!!";
+"write_button" = "Remember today";
+
+//List
+"list_title" = "You of that day";
+
+
+//Detail
+"detail_title" = "You of that day";
+"detail_subtitle" = "You’re looking back on yourself from that day";
+"detail_button_edit" = "Rewrite that day";
+"detail_button_delete" = "Let go of that day";
+
+//Edit
+"edit_title" = "That version of you";
+"edit_button" = "Remember this as is";
+
+//Delete
+"delete_alert_title" = "Are you sure you want to let go of that day?";
+"delete_alert_subtitle" = "Once it’s gone, the memory won’t come back";
+"delete_alert_cancel" = "Stay";
+"delete_alert_confirm" = "Let go";
+
+//Chart
+"chart_title" = "April 2025";
+"emotion_feedback_happy" = "You had many joyful emotions.\n Try to record more happy moments!";
+"emotion_feedback_tired" = "You’ve had many tiring days.\n How about giving yourself some rest?";
+"emotion_feedback_neutral" = "You’ve had calm, neutral days.\n It might help to track small emotional shifts.";
+"emotion_feedback_sad" = "You’ve had many sad days.\n Talking to someone may help lighten your heart.";
+"emotion_feedback_angry" = "You’ve felt angry quite often.\n Finding a way to release stress might help.";
+
+//PickerSheet
+"years" = "years";
+"month" = "month";
+"picker_button" = "Enter";
+
+
+

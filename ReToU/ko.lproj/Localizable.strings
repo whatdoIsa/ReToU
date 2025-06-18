@@ -1,0 +1,55 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Dean on 4/30/25.
+  
+*/
+
+//Launch
+"launch_title" = "오늘의 넌";
+"launch_subtitle" = "하루의 나를 솔직하게 바라보는 시간";
+"passwords" = "인증이 필요합니다.";
+"enter_passwords" = "확인";
+
+//Write
+"write_title" = "오늘의 넌 어때?";
+"write_date_format" = "yyyy년 M월 d일";
+"write_example_1" = "예시) 오늘 하루는 어땠나요?";
+"write_example_2" = "예시) 오늘 힘들었거나 행복했던 일이 있었나요?";
+"write_example_answer_1" = "코드에 오류가 너무 많아서 찾는데 오래 걸렸어요";
+"write_example_answer_2" = "여행을 가서 너무 설레요!!";
+"write_button" = "오늘을 기억하기";
+
+//List
+"list_title" = "그날의 너";
+
+//Detail
+"detail_title" = "그날의 넌";
+"detail_subtitle" = "그날의 나를 다시 돌아보는 중이에요";
+"detail_button_edit" = "그날을 다시담기";
+"detail_button_delete" = "그날을 놓아주기";
+
+//Edit
+"edit_title" = "그때의 너";
+"edit_button" = "이대로 기억하기";
+
+//Delete
+"delete_alert_title" = "정말 그날을 놓아줄까요?";
+"delete_alert_subtitle" = "떠나간 그날의 기억은 되돌릴 수 없어요";
+"delete_alert_cancel" = "머물기";
+"delete_alert_confirm" = "놓아주기";
+
+//Chart
+"chart_title" = "yyyy년 M월";
+"emotion_feedback_happy" = "기쁜 감정이 많았어요.\n 행복한 순간을 자주 기록해보세요!";
+"emotion_feedback_tired" = "피곤한 날이 많았어요.\n 충분한 휴식을 취해보는 건 어떨까요?";
+"emotion_feedback_neutral" = "담담한 하루들이 있었네요.\n 감정의 변화를 기록해보는 것도 좋아요.";
+"emotion_feedback_sad" = "슬픈 날이 많았어요.\n 마음을 나눌 누군가와 대화를 해보세요.";
+"emotion_feedback_angry" = "화가 났던 날이 많네요.\n 스트레스 해소 방법을 찾아보면 도움이 될 거예요!";
+
+//PickerSheet
+"years" = "년도";
+"month" = "월";
+"picker_button" = "선택완료";
+

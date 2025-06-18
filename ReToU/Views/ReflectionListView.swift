@@ -6,6 +6,22 @@
 
 import Foundation
 import SwiftUI
+import Foundation
+
+func localizedYearMonth(year: Int, month: Int) -> String {
+    var components = DateComponents()
+    components.year = year
+    components.month = month
+
+    let calendar = Calendar.current
+    let date = calendar.date(from: components) ?? Date()
+
+    let formatter = DateFormatter()
+    formatter.locale = Locale.current
+    formatter.setLocalizedDateFormatFromTemplate("yMMMM")
+
+    return formatter.string(from: date)
+}
 
 struct ReflectionListView: View {
     @EnvironmentObject var storage: ReflectionStorage
@@ -44,7 +60,7 @@ struct ReflectionListView: View {
     var body: some View {
         NavigationStack {
             VStack(){
-                Text("그날의 너")
+                Text("list_title")
                     .font(.custom("BMYEONSUNG-OTF", size: 40))
                     .fontWeight(.bold)
                     .foregroundColor(.black)
@@ -57,7 +73,7 @@ struct ReflectionListView: View {
                 Button(action: {
                     isShowingPicker = true
                 }) {
-                    Text("\(String(format: "%d", selectedYear))년 \(selectedMonth)월 ▼")
+                    Text("\(localizedYearMonth(year: selectedYear, month: selectedMonth)) ▼")
                         .font(.custom("BMYEONSUNG-OTF", size: 20))
                         .foregroundColor(.black)
                         .padding(.horizontal, 16)
