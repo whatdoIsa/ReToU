@@ -49,26 +49,24 @@ struct ReflectionWriteView: View {
                     VStack(alignment: .leading, spacing: 14) {
                         Text("write_example_1 \n       write_example_answer_1")
                             .font(.custom("BMYEONSUNG-OTF", size: 18))
-<<<<<<< Updated upstream
-                            .foregroundColor(.gray)
-                        Text("예시) 오늘 힘들었거나 행복했던 일이 있었나요? \n       여행을 가서 너무 설레요!!")
-=======
                             .foregroundColor(.gray.opacity(0.7))
+
                         Text("write_example_2 \n       write_example_answer_2")
->>>>>>> Stashed changes
                             .font(.custom("BMYEONSUNG-OTF", size: 18))
-                            .foregroundColor(.gray)
+                            .foregroundColor(.gray.opacity(0.7))
 
                         ScrollView {
                             TextEditor(text: $reflectionText)
                                 .frame(height: 200)
                                 .padding(8)
-                                .background(Color.white)
+                                .background(Color(hex: "#FFF9EC"))
+                                .foregroundColor(.black)
+                                .colorScheme(.light) // 강제 라이트모드 적용
                         }
                         .frame(height: 200)
                     }
                     .padding()
-                    .background(Color(hex: "#FFFDF3"))
+                    .background(Color(hex: "#FFF9EC"))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)

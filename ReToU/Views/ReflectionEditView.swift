@@ -42,9 +42,11 @@ struct ReflectionEditView: View {
                         TextEditor(text: $reflectionText)
                             .frame(height: 200)
                             .padding()
-                            .background(Color.white)
+                            .background(Color(hex: "#FFF9EC"))
+                            .foregroundColor(.black)
                             .cornerRadius(12)
                             .padding(.horizontal)
+                            .colorScheme(.light) // 강제 라이트모드 적용
                         
                         Button(action: {
                             let trimmedText = reflectionText.trimmingCharacters(in: .whitespacesAndNewlines)
