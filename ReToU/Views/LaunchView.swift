@@ -27,11 +27,11 @@ struct LaunchView: View {
                 VStack(spacing: 16) {
                     Spacer()
 
-                    Text("오늘의 넌")
+                    Text(LocalizedStringKey("launch_title"))
                         .font(.custom("BMYEONSUNG-OTF", size: 48))
                         .foregroundColor(.black)
 
-                    Text("하루의 나를 솔직하게 바라보는 시간")
+                    Text("launch_subtitle")
                         .font(.custom("BMYEONSUNG-OTF", size: 24))
                         .foregroundColor(.gray)
 
@@ -43,8 +43,8 @@ struct LaunchView: View {
             }
         }
         // 인증이 필요할 때 알림 표시
-        .alert("인증이 필요합니다.", isPresented: $showAuthFailedAlert) {
-            Button("확인", role: .cancel) {}
+        .alert("passwords", isPresented: $showAuthFailedAlert) {
+            Button("enter_passwords", role: .cancel) {}
         }
         .onAppear {
             // 생체 인증 또는 패스코드 인증 수행

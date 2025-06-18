@@ -12,6 +12,24 @@ struct YearMonthPickerSheet: View {
     @Binding var selectedMonth: Int
     var onDone: () -> Void
     
+    private func localizedYearText(for year: Int) -> String {
+        if Locale.current.language.languageCode?.identifier == "ko" {
+            return "\(year)년"
+        } else {
+            return "\(year)"
+        }
+    }
+
+    private func localizedMonthText(for month: Int) -> String {
+        if Locale.current.language.languageCode?.identifier == "ko" {
+            return "\(month)월"
+        } else {
+            let formatter = DateFormatter()
+            formatter.locale = Locale.current
+            return formatter.monthSymbols[month - 1]
+        }
+    }
+    
     private var years: [Int] {
         let current = Calendar.current.component(.year, from: Date())
         return Array((2000...current).reversed())
@@ -20,18 +38,18 @@ struct YearMonthPickerSheet: View {
     var body: some View {
         VStack {
             HStack {
-                Picker("년도", selection: $selectedYear) {
+                Picker("years", selection: $selectedYear) {
                     ForEach(years, id: \.self) { year in
-                        Text("\(String(format: "%d", year))년")
+                        Text(localizedYearText(for: year))
                             .font(.custom("BMYEONSUNG-OTF", size: 22))
                     }
                 }
                 .frame(maxWidth: .infinity)
                 .pickerStyle(WheelPickerStyle())
                 
-                Picker("월", selection: $selectedMonth) {
+                Picker("month", selection: $selectedMonth) {
                     ForEach(1...12, id: \.self) { month in
-                        Text("\(month)월")
+                        Text(localizedMonthText(for: month))
                             .font(.custom("BMYEONSUNG-OTF", size: 22))
                     }
                 }
@@ -40,7 +58,7 @@ struct YearMonthPickerSheet: View {
             }
             .padding()
             
-            Button("선택 완료") {
+            Button("picker_button") {
                 onDone()
             }
             .font(.custom("BMYEONSUNG-OTF", size: 22))

@@ -17,11 +17,11 @@ struct ReflectionWriteView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 28) {
-                    Text("오늘의 넌 어때?")
+                    Text("write_title")
                         .font(.custom("BMYEONSUNG-OTF", size: 48))
                         .foregroundColor(.black)
 
-                    Text(DateFormatter.koreanDate.string(from: Date()))
+                    Text(DateFormatter.localizedDate.string(from: Date()))
                         .font(.custom("BMYEONSUNG-OTF", size: 26))
                         .foregroundColor(.black)
 
@@ -47,10 +47,15 @@ struct ReflectionWriteView: View {
 
                     // 회고 입력
                     VStack(alignment: .leading, spacing: 14) {
-                        Text("예시) 오늘 하루는 어땠나요? \n       코드에 오류가 너무 많아서 찾는데 오래 걸렸어요")
+                        Text("write_example_1 \n       write_example_answer_1")
                             .font(.custom("BMYEONSUNG-OTF", size: 18))
+<<<<<<< Updated upstream
                             .foregroundColor(.gray)
                         Text("예시) 오늘 힘들었거나 행복했던 일이 있었나요? \n       여행을 가서 너무 설레요!!")
+=======
+                            .foregroundColor(.gray.opacity(0.7))
+                        Text("write_example_2 \n       write_example_answer_2")
+>>>>>>> Stashed changes
                             .font(.custom("BMYEONSUNG-OTF", size: 18))
                             .foregroundColor(.gray)
 
@@ -80,7 +85,7 @@ struct ReflectionWriteView: View {
                         storage.add(content: trimmedText, emotion: emotion.rawValue, date: Date())
                         navigateToList = true
                     }) {
-                        Text("오늘을 기억하기")
+                        Text("write_button")
                             .font(.custom("BMYEONSUNG-OTF", size: 22))
                             .foregroundColor(.white)
                             .padding()
@@ -93,7 +98,7 @@ struct ReflectionWriteView: View {
                     .disabled(selectedEmotion == nil)
                     
                     NavigationLink(destination: ReflectionListView(), isActive: $navigateToList) {
-                        EmptyView()
+                        Text("")
                     }
                     .hidden()
                 }

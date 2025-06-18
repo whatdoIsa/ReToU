@@ -28,7 +28,7 @@ struct ReflectionEditView: View {
             NavigationStack {
                 ScrollView {
                     VStack(spacing: 28) {
-                        Text("그때의 너")
+                        Text("edit_title")
                             .font(.custom("BMYEONSUNG-OTF", size: 40))
                             .foregroundColor(.black.opacity(0.7))
                         
@@ -81,7 +81,7 @@ struct ReflectionEditView: View {
     }
     
     var submitButton: some View {
-        Text("이대로 기억하기")
+        Text("edit_button")
             .font(.custom("BMYEONSUNG-OTF", size: 22))
             .foregroundColor(.white)
             .padding()

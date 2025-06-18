@@ -13,12 +13,12 @@ struct ReflectionDetailView: View {
             Color(hex: "#FFF9EC").ignoresSafeArea()
 
             VStack(spacing: 28) {
-                Text("그날의 넌")
+                Text("detail_title")
                     .font(.custom("BMYEONSUNG-OTF", size: 48))
                     .foregroundColor(.black.opacity(0.7))
                     .padding(.top, 10)
                 
-                Text("그날의 나를 다시 돌아보는 중이에요")
+                Text("detail_subtitle")
                     .font(.custom("BMYEONSUNG-OTF", size: 28))
                     .foregroundColor(.gray)
                 
@@ -51,7 +51,7 @@ struct ReflectionDetailView: View {
                 
                 
                 HStack(spacing: 20) {
-                    Button("그날을 다시담기") {
+                    Button("detail_button_edit") {
                         isEditing = true
                     }
                     .font(.custom("BMYEONSUNG-OTF", size: 22))
@@ -62,7 +62,7 @@ struct ReflectionDetailView: View {
                     .background(Color(hex: "#8ED8D5"))
                     .cornerRadius(20)
                     
-                    Button("그날을 놓아주기") {
+                    Button("detail_button_delete") {
                         showDeleteAlert = true
                     }
                     .font(.custom("BMYEONSUNG-OTF", size: 22))
@@ -71,12 +71,12 @@ struct ReflectionDetailView: View {
                     .frame(width: 140)
                     .background(Color(hex: "#F08B7D"))
                     .cornerRadius(20)
-                    .alert("정말 그날을 놓아줄까요? \n 떠나간 그날의 기억은 되돌릴 수 없어요", isPresented: $showDeleteAlert) {
-                        Button("놓아주기", role: .destructive) {
+                    .alert("delete_alert_title \n delete_alert_subtitle", isPresented: $showDeleteAlert) {
+                        Button("delete_alert_confirm", role: .destructive) {
                             storage.delete(reflection: reflection)
                             dismiss()
                         }
-                        Button("머물기", role: .cancel) {}
+                        Button("delete_alert_cancel", role: .cancel) {}
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
