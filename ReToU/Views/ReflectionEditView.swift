@@ -15,6 +15,8 @@ struct ReflectionEditView: View {
     @State private var selectedEmotion: EmotionType
     @State private var reflectionText: String
     @Environment(\.dismiss) var dismiss
+    @State private var errorMessage: String = ""
+    @State private var showError: Bool = false
 
     init(reflection: Binding<Reflection>) {
         self._reflection = reflection
@@ -48,18 +50,34 @@ struct ReflectionEditView: View {
                             .padding(.horizontal)
                             .colorScheme(.light) // 강제 라이트모드 적용
                         
+                        // 에러 메시지 표시
+                        if showError {
+                            Text(errorMessage)
+                                .font(.custom("BMYEONSUNG-OTF", size: 16))
+                                .foregroundColor(.red)
+                                .padding(.horizontal)
+                        }
+                        
                         Button(action: {
                             let trimmedText = reflectionText.trimmingCharacters(in: .whitespacesAndNewlines)
-                            guard !trimmedText.isEmpty else { return }
+                            guard !trimmedText.isEmpty else {
+                                showErrorMessage("회고 내용을 입력해주세요 ✍️")
+                                return
+                            }
                             
-                            storage.update(reflection: reflection, content: trimmedText, emotion: selectedEmotion.rawValue)
-                            dismiss()
+                            let result = storage.update(reflection: reflection, content: trimmedText, emotion: selectedEmotion.rawValue)
+                            switch result {
+                            case .success(_):
+                                dismiss()
+                            case .failure(let error):
+                                showErrorMessage(error.userFriendlyMessage)
+                            }
                         }) {
                             submitButton
                         }
                         .padding(.horizontal)
                         .frame(width: 240, height: 54)
-                        .disabled(selectedEmotion == nil)
+                        .disabled(false)
                     }
                     .padding(.top, 60)
                     .navigationBarBackButtonHidden(true)
@@ -114,5 +132,15 @@ struct ReflectionEditView: View {
             .onTapGesture {
                 selectedEmotion = emotion
             }
+    }
+    
+    private func showErrorMessage(_ message: String) {
+        errorMessage = message
+        showError = true
+        
+        // 3초 후 에러 메시지 자동 숨김
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            showError = false
+        }
     }
 }
