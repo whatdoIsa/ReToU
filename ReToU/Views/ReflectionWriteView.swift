@@ -12,6 +12,8 @@ struct ReflectionWriteView: View {
     @State private var reflectionText: String = ""
     @Environment(\.dismiss) var dismiss
     @State private var navigateToList = false
+    @State private var errorMessage: String = ""
+    @State private var showError: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -73,14 +75,33 @@ struct ReflectionWriteView: View {
                     )
                     .padding(.horizontal)
 
+                    // 에러 메시지 표시
+                    if showError {
+                        Text(errorMessage)
+                            .font(.custom("BMYEONSUNG-OTF", size: 16))
+                            .foregroundColor(.red)
+                            .padding(.horizontal)
+                    }
+                    
                     // 작성 완료 버튼
                     Button(action: {
-                        guard let emotion = selectedEmotion else { return }
+                        guard let emotion = selectedEmotion else {
+                            showErrorMessage("감정을 선택해주세요 😊")
+                            return
+                        }
                         let trimmedText = reflectionText.trimmingCharacters(in: .whitespacesAndNewlines)
-                        guard !trimmedText.isEmpty else { return }
+                        guard !trimmedText.isEmpty else {
+                            showErrorMessage("회고 내용을 입력해주세요 ✍️")
+                            return
+                        }
 
-                        storage.add(content: trimmedText, emotion: emotion.rawValue, date: Date())
-                        navigateToList = true
+                        let result = storage.add(content: trimmedText, emotion: emotion.rawValue, date: Date())
+                        switch result {
+                        case .success(_):
+                            navigateToList = true
+                        case .failure(let error):
+                            showErrorMessage(error.userFriendlyMessage)
+                        }
                     }) {
                         Text("오늘을 기억하기")
                             .font(.custom("BMYEONSUNG-OTF", size: 22))
@@ -106,6 +127,16 @@ struct ReflectionWriteView: View {
             }
             .background(Color(hex: "#FFF9EC").ignoresSafeArea())
             .navigationBarBackButtonHidden(true)
+        }
+    }
+    
+    private func showErrorMessage(_ message: String) {
+        errorMessage = message
+        showError = true
+        
+        // 3초 후 에러 메시지 자동 숨김
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            showError = false
         }
     }
 }

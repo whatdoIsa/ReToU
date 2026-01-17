@@ -16,30 +16,8 @@ struct ReflectionListView: View {
     @State private var isShowingDetail = false
     @State private var isShowingStatsView = false
 
-    var filteredReflections: [Reflection] {
-        // 선택된 연도와 월에 해당하는 회고만 필터링
-        storage.reflections.filter {
-            let year = Calendar.current.component(.year, from: $0.date)
-            let month = Calendar.current.component(.month, from: $0.date)
-            return year == selectedYear && month == selectedMonth
-        }
-    }
-
-    var uniqueReflections: [Reflection] {
-        // 같은 날짜의 회고가 중복으로 보이지 않도록 필터링
-        var seenDates: Set<Date> = [] // 이미 본 날짜들을 저장
-        let calendar = Calendar.current
-
-        return filteredReflections.filter { reflection in
-            let day = calendar.startOfDay(for: reflection.date) // 시간 제외한 날짜만 비교
-            if seenDates.contains(day) {
-                return false    // 이미 본 날짜면 제외
-            } else {
-                seenDates.insert(day)
-                return true     // 처음 보는 날짜면 포함
-            }
-        }
-    }
+    // ⭐ ReflectionStorage에서 이미 필터링과 중복 제거가 완료된 데이터 사용
+    // 별도의 filteredReflections, uniqueReflections 로직 제거
 
     var body: some View {
         NavigationStack {
@@ -81,8 +59,8 @@ struct ReflectionListView: View {
                 .navigationBarBackButtonHidden(true)
                 
                 List {
-                    ForEach(uniqueReflections.sorted(by: { $0.date > $1.date })) { reflection in
-                        // 중복 제거된 회고 리스트를 최신순으로 정렬하여 표시
+                    ForEach(storage.reflections) { reflection in
+                        // ReflectionStorage에서 이미 정렬되고 중복 제거된 데이터 사용
                         Button {
                             selectedReflection = reflection
                             isShowingDetail = true
@@ -163,6 +141,18 @@ struct ReflectionListView: View {
                     .environmentObject(storage)
             }
         }
+        .onAppear {
+            // ⭐ 뷰가 나타날 때 선택된 년/월에 맞는 데이터 로드
+            storage.fetchReflections(forYear: selectedYear, month: selectedMonth)
+        }
+        .onChange(of: selectedYear) { _, _ in
+            // ⭐ 년도가 변경될 때 데이터 다시 로드
+            storage.fetchReflections(forYear: selectedYear, month: selectedMonth)
+        }
+        .onChange(of: selectedMonth) { _, _ in
+            // ⭐ 월이 변경될 때 데이터 다시 로드
+            storage.fetchReflections(forYear: selectedYear, month: selectedMonth)
+        }
     }
 }
 
@@ -196,72 +186,5 @@ struct ReflectionDetailViewWrapper: View {
              }
      }
  }
- 
- //함수 참조 방식 - 클로저 유지하지만 함수 이름으로 전달하는 방식
- func handleUpdate(_ updated: Reflection) {
-     print("함수 참조: 수정됨 - \(updated)")
- }
-
- func handleDismiss() {
-     print("함수 참조: 뷰 닫힘")
- }
-
- struct SomeParentView: View {
-     @State private var reflection = Reflection(...)
-
-     var body: some View {
-         ReflectionDetailViewWrapper_Closure(
-             reflection: $reflection,
-             onUpdate: handleUpdate,
-             onDismiss: handleDismiss
-         )
-     }
- }
-
- //Delegation 방식 - UIKit에서 주로 사용
- protocol ReflectionDetailDelegate: AnyObject {
-     func didUpdate(reflection: Reflection)
-     func didDismissDetail()
- }
-
- class ReflectionDelegateHolder: ObservableObject, ReflectionDetailDelegate {
-     func didUpdate(reflection: Reflection) {
-         print("델리게이트: 수정됨 - \(reflection)")
-     }
-
-     func didDismissDetail() {
-         print("델리게이트: 뷰 닫힘")
-     }
- }
-
- struct ReflectionDetailViewWrapper_Delegate: View {
-     @Binding var reflection: Reflection
-     var delegate: ReflectionDetailDelegate?
-
-     var body: some View {
-         ReflectionDetailView(reflection: $reflection)
-             .onDisappear {
-                 delegate?.didUpdate(reflection: reflection)
-                 delegate?.didDismissDetail()
-             }
-     }
- }
- 
- struct ParentView: View {
-     @StateObject private var delegateHolder = ReflectionDelegateHolder()
-     @State private var reflection = Reflection(...)
-
-     var body: some View {
-         ReflectionDetailViewWrapper_Delegate(
-             reflection: $reflection,
-             delegate: delegateHolder
-         )
-     }
- }
- 
- 
- 클로저 - SwiftUI 내에서 간단한 데이터 전달, UI 이벤트 처리
- 함수참조 - 동일, 단지 더 명확한 함수명으로 가독성 향상
- Delegation - 복잡한 컴포넌트, 분리된 로직, 외부 객체에 위임할 때
  
  */

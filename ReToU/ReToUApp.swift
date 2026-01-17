@@ -1,11 +1,12 @@
 //
-//  ReToU_1App.swift
-//  ReToU_1
+//  ReToUApp.swift
+//  ReToU
 //
 //  Created by Dean_SSONG on 4/21/25.
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct ReToUApp: App {
@@ -15,6 +16,7 @@ struct ReToUApp: App {
         WindowGroup {
             LaunchView()
                 .environmentObject(storage)
+                .modelContainer(DataContainer.shared.container)
         }
     }
 }
