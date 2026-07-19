@@ -15,8 +15,20 @@ enum EmotionType: String, CaseIterable, Identifiable, Codable {
     case angry = "😠"
     
     var id: String { rawValue }
-    
-    var color: Color { //감정 분석을 넣을 수 있는 시간이 있다면..
+
+    /// VoiceOver 등 접근성에서 읽어줄 감정 이름
+    var accessibilityName: String {
+        switch self {
+        case .happy: return String(localized: "emotion_happy", defaultValue: "행복")
+        case .tired: return String(localized: "emotion_tired", defaultValue: "피곤")
+        case .neutral: return String(localized: "emotion_neutral", defaultValue: "보통")
+        case .sad: return String(localized: "emotion_sad", defaultValue: "슬픔")
+        case .angry: return String(localized: "emotion_angry", defaultValue: "화남")
+        }
+    }
+
+    /// 통계 차트용 감정별 색상
+    var color: Color {
         switch self {
         case .happy: return Color(hex: "#FFB3B3")
         case .tired: return Color(hex: "#C9C9C9")

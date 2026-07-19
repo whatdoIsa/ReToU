@@ -6,5 +6,7 @@
 	<array>
 		<string>BMYEONSUNG_otf.otf</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>

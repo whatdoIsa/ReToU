@@ -12,132 +12,101 @@ struct ReflectionWriteView: View {
     @State private var reflectionText: String = ""
     @Environment(\.dismiss) var dismiss
     @State private var navigateToList = false
-    @State private var errorMessage: String = ""
-    @State private var showError: Bool = false
+    @State private var saveErrorMessage: String?
+
+    /// 감정 선택 + 내용 입력이 모두 완료되어야 저장 가능
+    private var canSubmit: Bool {
+        selectedEmotion != nil
+            && !reflectionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 28) {
                     Text("write_title")
-                        .font(.custom("BMYEONSUNG-OTF", size: 48))
-                        .foregroundColor(.black)
+                        .font(AppFont.hand(48, relativeTo: .largeTitle))
+                        .foregroundColor(AppColor.textPrimary)
 
                     Text(DateFormatter.localizedDate.string(from: Date()))
-                        .font(.custom("BMYEONSUNG-OTF", size: 26))
-                        .foregroundColor(.black)
+                        .font(AppFont.hand(26, relativeTo: .title2))
+                        .foregroundColor(AppColor.textPrimary)
 
                     // 감정 선택
-                    HStack(spacing: 10) {
-                        ForEach(EmotionType.allCases) { emotion in
-                            Text(emotion.rawValue)
-                                .font(.title3)
-                                .padding(12)
-                                .background(
-                                    selectedEmotion == emotion ? Color(hex: "#FF8977") : Color.white
-                                )
-                                .clipShape(Circle())
-                                .overlay(
-                                    Circle()
-                                        .stroke(Color.gray.opacity(0.3))
-                                )
-                                .onTapGesture {
-                                    selectedEmotion = emotion
-                                }
-                        }
-                    }
+                    EmotionPicker(selection: $selectedEmotion)
 
                     // 회고 입력
                     VStack(alignment: .leading, spacing: 14) {
                         Text("write_example_1 \n       write_example_answer_1")
-                            .font(.custom("BMYEONSUNG-OTF", size: 18))
-                            .foregroundColor(.gray.opacity(0.7))
+                            .font(AppFont.hand(18, relativeTo: .body))
+                            .foregroundColor(AppColor.textSecondary.opacity(0.7))
 
                         Text("write_example_2 \n       write_example_answer_2")
-                            .font(.custom("BMYEONSUNG-OTF", size: 18))
-                            .foregroundColor(.gray.opacity(0.7))
+                            .font(AppFont.hand(18, relativeTo: .body))
+                            .foregroundColor(AppColor.textSecondary.opacity(0.7))
 
-                        ScrollView {
-                            TextEditor(text: $reflectionText)
-                                .frame(height: 200)
-                                .padding(8)
-                                .background(Color(hex: "#FFF9EC"))
-                                .foregroundColor(.black)
-                                .colorScheme(.light) // 강제 라이트모드 적용
-                        }
-                        .frame(height: 200)
+                        TextEditor(text: $reflectionText)
+                            .frame(height: 200)
+                            .padding(8)
+                            .scrollContentBackground(.hidden)
+                            .background(AppColor.background)
+                            .foregroundColor(AppColor.textPrimary)
                     }
                     .padding()
-                    .background(Color(hex: "#FFF9EC"))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .background(AppColor.background)
+                    .clipShape(RoundedRectangle(cornerRadius: AppRadius.field))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: AppRadius.field)
                             .stroke(Color.gray.opacity(1))
                     )
                     .padding(.horizontal)
 
-                    // 에러 메시지 표시
-                    if showError {
-                        Text(errorMessage)
-                            .font(.custom("BMYEONSUNG-OTF", size: 16))
-                            .foregroundColor(.red)
-                            .padding(.horizontal)
-                    }
-                    
-                    // 작성 완료 버튼
-                    Button(action: {
-                        guard let emotion = selectedEmotion else {
-                            showErrorMessage("감정을 선택해주세요 😊")
-                            return
-                        }
-                        let trimmedText = reflectionText.trimmingCharacters(in: .whitespacesAndNewlines)
-                        guard !trimmedText.isEmpty else {
-                            showErrorMessage("회고 내용을 입력해주세요 ✍️")
-                            return
-                        }
-
-                        let result = storage.add(content: trimmedText, emotion: emotion.rawValue, date: Date())
-                        switch result {
-                        case .success(_):
-                            navigateToList = true
-                        case .failure(let error):
-                            showErrorMessage(error.userFriendlyMessage)
-                        }
-                    }) {
+                    // 작성 완료 버튼 — 입력이 완료될 때까지 비활성화
+                    Button(action: submit) {
                         Text("write_button")
-                            .font(.custom("BMYEONSUNG-OTF", size: 22))
+                            .font(AppFont.hand(22, relativeTo: .title3))
                             .foregroundColor(.white)
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(Color(hex: "#4ECFD8"))
-                            .cornerRadius(25)
+                            .background(canSubmit ? AppColor.accent : AppColor.accent.opacity(0.4))
+                            .clipShape(Capsule())
                     }
                     .padding(.horizontal)
                     .frame(width: 240, height: 54)
-                    .disabled(selectedEmotion == nil)
-                    
-                    NavigationLink(destination: ReflectionListView(), isActive: $navigateToList) {
-                        Text("")
-                    }
-                    .hidden()
+                    .disabled(!canSubmit)
                 }
                 .padding(.top)
             }
             .onTapGesture {
                 UIApplication.shared.endEditing()
             }
-            .background(Color(hex: "#FFF9EC").ignoresSafeArea())
+            .background(AppColor.background.ignoresSafeArea())
             .navigationBarBackButtonHidden(true)
+            .navigationDestination(isPresented: $navigateToList) {
+                ReflectionListView()
+            }
+            // 저장 실패는 스쳐 지나가는 텍스트가 아닌 alert로 명확히 전달
+            .alert("error_title", isPresented: .init(
+                get: { saveErrorMessage != nil },
+                set: { if !$0 { saveErrorMessage = nil } }
+            )) {
+                Button("error_confirm", role: .cancel) {}
+            } message: {
+                Text(saveErrorMessage ?? "")
+            }
         }
     }
-    
-    private func showErrorMessage(_ message: String) {
-        errorMessage = message
-        showError = true
-        
-        // 3초 후 에러 메시지 자동 숨김
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            showError = false
+
+    private func submit() {
+        guard let emotion = selectedEmotion else { return }
+        let trimmedText = reflectionText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedText.isEmpty else { return }
+
+        switch storage.add(content: trimmedText, emotion: emotion.rawValue, date: Date()) {
+        case .success:
+            navigateToList = true
+        case .failure(let error):
+            saveErrorMessage = error.userFriendlyMessage
         }
     }
 }

@@ -41,7 +41,7 @@ struct YearMonthPickerSheet: View {
                 Picker("years", selection: $selectedYear) {
                     ForEach(years, id: \.self) { year in
                         Text(localizedYearText(for: year))
-                            .font(.custom("BMYEONSUNG-OTF", size: 22))
+                            .font(AppFont.hand(22, relativeTo: .title3))
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -50,7 +50,7 @@ struct YearMonthPickerSheet: View {
                 Picker("month", selection: $selectedMonth) {
                     ForEach(1...12, id: \.self) { month in
                         Text(localizedMonthText(for: month))
-                            .font(.custom("BMYEONSUNG-OTF", size: 22))
+                            .font(AppFont.hand(22, relativeTo: .title3))
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -61,7 +61,7 @@ struct YearMonthPickerSheet: View {
             Button("picker_button") {
                 onDone()
             }
-            .font(.custom("BMYEONSUNG-OTF", size: 22))
+            .font(AppFont.hand(22, relativeTo: .title3))
             .padding()
         }
         .presentationDetents([.fraction(0.4)])

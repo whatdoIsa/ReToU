@@ -11,6 +11,9 @@
 "launch_subtitle" = "하루의 나를 솔직하게 바라보는 시간";
 "passwords" = "인증이 필요합니다.";
 "enter_passwords" = "확인";
+"auth_failed_title" = "인증에 실패했어요";
+"auth_failed_message" = "회고를 보호하기 위해 인증이 필요해요.";
+"auth_retry" = "다시 시도";
 
 //Write
 "write_title" = "오늘의 넌 어때?";
@@ -23,6 +26,12 @@
 
 //List
 "list_title" = "그날의 너";
+"list_empty_title" = "아직 이 달의 기억이 없어요";
+"list_empty_subtitle" = "오늘의 마음을 한 줄 남겨보세요";
+
+//Error
+"error_title" = "문제가 발생했어요";
+"error_confirm" = "확인";
 
 //Detail
 "detail_title" = "그날의 넌";
@@ -47,6 +56,14 @@
 "emotion_feedback_neutral" = "담담한 하루들이 있었네요.\n 감정의 변화를 기록해보는 것도 좋아요.";
 "emotion_feedback_sad" = "슬픈 날이 많았어요.\n 마음을 나눌 누군가와 대화를 해보세요.";
 "emotion_feedback_angry" = "화가 났던 날이 많네요.\n 스트레스 해소 방법을 찾아보면 도움이 될 거예요!";
+"emotion_feedback_empty" = "이번 달에는 회고 데이터가 부족해요.";
+
+//Emotion (접근성)
+"emotion_happy" = "행복";
+"emotion_tired" = "피곤";
+"emotion_neutral" = "보통";
+"emotion_sad" = "슬픔";
+"emotion_angry" = "화남";
 
 //PickerSheet
 "years" = "년도";

@@ -1,6 +1,6 @@
 //
 //  EmotionStatsView.swift
-//  ReToU_1
+//  ReToU
 //
 //  Created by Dean_SSONG on 4/22/25.
 //
@@ -17,8 +17,20 @@ struct EmotionStat: Identifiable {
 struct EmotionStatsView: View {
     @EnvironmentObject var storage: ReflectionStorage
     @State private var currentDate = Date()
-    
-    
+
+    // 현재 월 기준 데이터 — body 밖에서 계산해 뷰 코드와 분리
+    private var currentYear: Int { Calendar.current.component(.year, from: currentDate) }
+    private var currentMonth: Int { Calendar.current.component(.month, from: currentDate) }
+
+    private var stats: [EmotionStat] {
+        storage.emotionSummary(forYear: currentYear, month: currentMonth)
+            .map { EmotionStat(emotion: $0.key, count: $0.value) }
+    }
+
+    private var feedbackMessage: String {
+        storage.dominantEmotionMessage(forYear: currentYear, month: currentMonth).1
+    }
+
     var body: some View {
         VStack {
             // 월 이동 헤더
@@ -27,27 +39,22 @@ struct EmotionStatsView: View {
                     Image(systemName: "chevron.left")
                         .foregroundColor(.gray)
                 }
+                .accessibilityLabel("이전 달")
 
                 Text(currentDate.yearMonthString())
-                    .font(.custom("BMYEONSUNG-OTF", size: 26))
+                    .font(AppFont.hand(26, relativeTo: .title2))
                     .fontWeight(.semibold)
-                    .foregroundColor(.black)
+                    .foregroundColor(AppColor.textPrimary)
 
                 Button(action: { changeMonth(by: 1) }) {
                     Image(systemName: "chevron.right")
                         .foregroundColor(.gray.opacity(0.5))
                 }
+                .accessibilityLabel("다음 달")
             }
 
             Divider()
                 .padding(.bottom, 8)
-
-            // 현재 월 기준 데이터 계산
-            let year = Calendar.current.component(.year, from: currentDate)
-            let month = Calendar.current.component(.month, from: currentDate)
-            let summary = storage.emotionSummary(forYear: year, month: month)
-            let stats: [EmotionStat] = summary.map { EmotionStat(emotion: $0.key, count: $0.value) }
-            let (_, message) = storage.dominantEmotionMessage(forYear: year, month: month)
 
             // 차트 표시
             Chart(stats) { stat in
@@ -60,14 +67,14 @@ struct EmotionStatsView: View {
             .chartXAxis {
                 AxisMarks(preset: .aligned) { value in
                     AxisGridLine()
-                        .foregroundStyle(Color.gray.opacity(0.4)) // 가로선 색상 지정
+                        .foregroundStyle(Color.gray.opacity(0.4))
                     AxisTick()
                     AxisValueLabel {
                         if let emotionString = value.as(String.self),
                            let emotion = EmotionType(rawValue: emotionString) {
                             Text(emotion.rawValue)
-                                .font(.custom("BMYEONSUNG-OTF", size: 26))
-                                .foregroundColor(.black)
+                                .font(AppFont.hand(26, relativeTo: .title2))
+                                .foregroundColor(AppColor.textPrimary)
                         }
                     }
                 }
@@ -75,12 +82,12 @@ struct EmotionStatsView: View {
             .chartYAxis {
                 AxisMarks(preset: .extended) { value in
                     AxisGridLine()
-                        .foregroundStyle(Color.gray.opacity(0.7)) // 세로선 색상 지정
+                        .foregroundStyle(Color.gray.opacity(0.7))
                     AxisTick()
-                    AxisValueLabel{
+                    AxisValueLabel {
                         Text("\(value.as(Int.self) ?? 0)")
-                            .font(.custom("BMYEONSUNG-OTF", size: 14))
-                            .foregroundColor(.black.opacity(0.7))
+                            .font(AppFont.hand(14, relativeTo: .caption))
+                            .foregroundColor(AppColor.textPrimary.opacity(0.7))
                     }
                 }
             }
@@ -88,17 +95,18 @@ struct EmotionStatsView: View {
             .padding(.horizontal)
 
             // 감정 분석 메시지
-            Text(message)
-                .font(.custom("BMYEONSUNG-OTF", size: 22))
+            Text(feedbackMessage)
+                .font(AppFont.hand(22, relativeTo: .title3))
                 .padding()
                 .multilineTextAlignment(.center)
-                .foregroundColor(.black)
+                .foregroundColor(AppColor.textPrimary)
 
             Spacer()
         }
         .padding()
-        .background(Color(hex: "#FFF9EC").ignoresSafeArea())
+        .background(AppColor.background.ignoresSafeArea())
     }
+
     func changeMonth(by value: Int) {
         if let newDate = Calendar.current.date(byAdding: .month, value: value, to: currentDate) {
             currentDate = newDate

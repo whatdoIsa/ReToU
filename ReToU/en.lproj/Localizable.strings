@@ -11,6 +11,9 @@
 "launch_subtitle" = "A time to honestly reflect on your day";
 "passwords" = "Enter the passwords";
 "enter_passwords" = "Enter";
+"auth_failed_title" = "Authentication Failed";
+"auth_failed_message" = "Authentication is required to protect your reflections.";
+"auth_retry" = "Try Again";
 
 //Write
 "write_title" = "How are you today?";
@@ -23,6 +26,12 @@
 
 //List
 "list_title" = "You of that day";
+"list_empty_title" = "No memories for this month yet";
+"list_empty_subtitle" = "Leave a line about how you feel today";
+
+//Error
+"error_title" = "Something went wrong";
+"error_confirm" = "OK";
 
 
 //Detail
@@ -48,6 +57,14 @@
 "emotion_feedback_neutral" = "You’ve had calm, neutral days.\n It might help to track small emotional shifts.";
 "emotion_feedback_sad" = "You’ve had many sad days.\n Talking to someone may help lighten your heart.";
 "emotion_feedback_angry" = "You’ve felt angry quite often.\n Finding a way to release stress might help.";
+"emotion_feedback_empty" = "Not enough reflections this month yet.";
+
+//Emotion (accessibility)
+"emotion_happy" = "Happy";
+"emotion_tired" = "Tired";
+"emotion_neutral" = "Neutral";
+"emotion_sad" = "Sad";
+"emotion_angry" = "Angry";
 
 //PickerSheet
 "years" = "years";

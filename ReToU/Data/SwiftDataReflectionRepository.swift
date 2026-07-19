@@ -33,20 +33,13 @@ final class SwiftDataReflectionRepository: ObservableObject {
         }
         
         let dateKey = dateManager.generateDateKey(for: date)
-        
+
         do {
             let resultReflection: Reflection
-            
-            // 같은 dateKey를 가진 기존 회고 검색 (전체 조회 후 필터링)
-            let targetDateKey = dateManager.generateDateKey(for: date)
-            
-            let fetchRequest = FetchDescriptor<Reflection>()
-            
-            let allReflections = try modelContext.fetch(fetchRequest)
-            let existingReflection = allReflections.first { reflection in
-                dateManager.generateDateKey(for: reflection.date) == targetDateKey
-            }
-            
+
+            // 같은 날짜의 기존 회고를 하루 범위 쿼리로 검색
+            let existingReflection = try fetchReflection(onSameDayAs: date)
+
             if let existingReflection = existingReflection {
                 // 업데이트 경로: 기존 회고 수정
                 existingReflection.emotion = trimmedEmotion
@@ -132,19 +125,15 @@ final class SwiftDataReflectionRepository: ObservableObject {
         }
         
         do {
+            // [시작, 끝) 범위 쿼리 — end는 exclusive여야 월의 마지막 날 기록이 포함됨
+            let start = dateRange.start
+            let end = dateRange.end
             let fetchRequest = FetchDescriptor<Reflection>(
+                predicate: #Predicate { $0.date >= start && $0.date < end },
                 sortBy: [SortDescriptor(\.order, order: .forward)]
             )
-            
-            let allReflections = try modelContext.fetch(fetchRequest)
-            
-            // 날짜 범위 필터링
-            let filteredReflections = allReflections.filter { reflection in
-                reflection.date >= dateRange.start && reflection.date <= dateRange.end
-            }
-            
-            print("📚 Fetched \(filteredReflections.count) reflections for \(year)-\(month)")
-            
+
+            let filteredReflections = try modelContext.fetch(fetchRequest)
             return .success(filteredReflections)
         } catch {
             return .failure(.saveFailed(error))
@@ -167,15 +156,8 @@ final class SwiftDataReflectionRepository: ObservableObject {
     
     /// 오늘 회고 존재 여부 확인
     func hasReflectionForToday() -> Bool {
-        let todayDateKey = dateManager.todayDateKey()
-        
         do {
-            let fetchRequest = FetchDescriptor<Reflection>()
-            let allReflections = try modelContext.fetch(fetchRequest)
-            
-            return allReflections.contains { reflection in
-                dateManager.generateDateKey(for: reflection.date) == todayDateKey
-            }
+            return try fetchReflection(onSameDayAs: Date()) != nil
         } catch {
             print("❌ Error checking today's reflection: \(error)")
             return false
@@ -204,7 +186,21 @@ final class SwiftDataReflectionRepository: ObservableObject {
     
     
     // MARK: - Private Helpers
-    
+
+    /// 특정 날짜와 같은 날에 작성된 회고를 하루 범위 쿼리로 조회
+    private func fetchReflection(onSameDayAs date: Date) throws -> Reflection? {
+        guard let dayRange = dateManager.dayRange(for: date) else {
+            return nil
+        }
+        let start = dayRange.start
+        let end = dayRange.end
+        var fetchRequest = FetchDescriptor<Reflection>(
+            predicate: #Predicate { $0.date >= start && $0.date < end }
+        )
+        fetchRequest.fetchLimit = 1
+        return try modelContext.fetch(fetchRequest).first
+    }
+
     /// 다음 order 값 가져오기
     private func getNextOrder() -> Int {
         do {

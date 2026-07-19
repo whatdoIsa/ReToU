@@ -59,65 +59,60 @@ final class ReflectionUseCase: ObservableObject {
         return repository.emotionSummary(forYear: year, month: month)
     }
     
-    /// 지배적 감정과 메시지 UseCase
+    /// 지배적 감정과 메시지 UseCase (Localizable.strings의 번역 키 사용)
     func getDominantEmotionMessage(forYear year: Int, month: Int) -> (EmotionType?, String) {
         let summary = getEmotionSummary(forYear: year, month: month)
         guard let dominant = summary.max(by: { $0.value < $1.value })?.key else {
-            return (nil, "이번 달에는 회고 데이터가 부족해요.")
+            return (nil, NSLocalizedString("emotion_feedback_empty", comment: ""))
         }
 
-        let message: String
+        let messageKey: String
         switch dominant {
-        case .happy:
-            message = "기쁜 감정이 많았어요. \n 행복한 순간을 자주 기록해보세요!"
-        case .tired:
-            message = "피곤한 날이 많았네요. \n 충분한 휴식을 취해보는 건 어떨까요?"
-        case .neutral:
-            message = "담담한 하루들이 있었네요. \n 감정의 변화를 기록해보는 것도 좋아요."
-        case .sad:
-            message = "슬픈 날이 많았네요. \n 마음을 나눌 누군가와 대화를 해보세요."
-        case .angry:
-            message = "화가 났던 날이 많네요. \n 스트레스 해소 방법을 찾아보면 도움이 될 거예요."
+        case .happy: messageKey = "emotion_feedback_happy"
+        case .tired: messageKey = "emotion_feedback_tired"
+        case .neutral: messageKey = "emotion_feedback_neutral"
+        case .sad: messageKey = "emotion_feedback_sad"
+        case .angry: messageKey = "emotion_feedback_angry"
         }
 
-        return (dominant, message)
+        return (dominant, NSLocalizedString(messageKey, comment: ""))
     }
     
     // MARK: - Migration Use Cases
     
     /// UserDefaults → SwiftData 마이그레이션 UseCase
     func migrateFromLegacyStorage() -> Result<Void, ReflectionError> {
-        // UserDefaults에서 기존 데이터 불러오기
-        guard let data = UserDefaults.standard.data(forKey: "reflections_key"),
-              let legacyReflections = try? JSONDecoder().decode([LegacyReflection].self, from: data) else {
-            print("📦 No legacy data to migrate")
-            return .success(())
-        }
-        
-        do {
-            // Repository를 통해 직접 마이그레이션 실행
-            for legacy in legacyReflections {
-                let result = repository.createOrUpdate(
-                    content: legacy.content, 
-                    emotion: legacy.emotion, 
-                    date: legacy.date
-                )
-                
-                // 각 항목 마이그레이션 실패 시 전체 실패
-                if case .failure(let error) = result {
-                    print("❌ Migration failed for item: \(error)")
-                    return .failure(error)
-                }
-            }
-            
-            // 마이그레이션 성공시 UserDefaults 정리
+        // 마이그레이션할 레거시 데이터가 없는 경우 (정상)
+        guard let data = UserDefaults.standard.data(forKey: "reflections_key") else {
             markMigrationDone()
-            print("✅ Migration completed successfully for \(legacyReflections.count) items")
             return .success(())
-            
-        } catch {
-            return .failure(.saveFailed(error))
         }
+
+        // 데이터는 있으나 해석 불가 — "데이터 없음"과 구분해 실패로 처리
+        guard let legacyReflections = try? JSONDecoder().decode([LegacyReflection].self, from: data) else {
+            print("❌ Legacy data exists but could not be decoded")
+            return .failure(.invalidContent("기존 데이터를 읽을 수 없습니다"))
+        }
+
+        // Repository를 통해 직접 마이그레이션 실행
+        for legacy in legacyReflections {
+            let result = repository.createOrUpdate(
+                content: legacy.content,
+                emotion: legacy.emotion,
+                date: legacy.date
+            )
+
+            // 각 항목 마이그레이션 실패 시 전체 실패
+            if case .failure(let error) = result {
+                print("❌ Migration failed for item: \(error)")
+                return .failure(error)
+            }
+        }
+
+        // 마이그레이션 성공시 완료 표시
+        markMigrationDone()
+        print("✅ Migration completed successfully for \(legacyReflections.count) items")
+        return .success(())
     }
     
     /// 마이그레이션 완료 표시

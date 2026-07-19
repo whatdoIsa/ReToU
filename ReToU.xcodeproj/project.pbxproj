@@ -258,7 +258,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ReToU-1-Info.plist";
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "\ud68c\uace0 \uc7a0\uae08 \ud574\uc81c\ub97c \uc704\ud574 Face ID\ub97c \uc0ac\uc6a9\ud569\ub2c8\ub2e4.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -290,7 +290,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ReToU-1-Info.plist";
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "\ud68c\uace0 \uc7a0\uae08 \ud574\uc81c\ub97c \uc704\ud574 Face ID\ub97c \uc0ac\uc6a9\ud569\ub2c8\ub2e4.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

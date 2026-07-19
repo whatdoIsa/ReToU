@@ -7,6 +7,9 @@
 
 import Foundation
 
+// 프리뷰/개발 전용 더미 데이터 — 배포 빌드에는 포함되지 않음
+// 주의: 이 인스턴스들은 ModelContext에 insert되지 않으므로 삭제/수정 대상이 되어서는 안 됨
+#if DEBUG
 struct DummyData {
     static let reflections: [Reflection] = {
         let formatter = DateFormatter()
@@ -29,3 +32,4 @@ struct DummyData {
         return dummyReflections
     }()
 }
+#endif

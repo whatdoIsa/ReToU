@@ -4,24 +4,7 @@
 //  Created by Dean_SSONG on 4/18/25.
 //
 
-import Foundation
 import SwiftUI
-import Foundation
-
-func localizedYearMonth(year: Int, month: Int) -> String {
-    var components = DateComponents()
-    components.year = year
-    components.month = month
-
-    let calendar = Calendar.current
-    let date = calendar.date(from: components) ?? Date()
-
-    let formatter = DateFormatter()
-    formatter.locale = Locale.current
-    formatter.setLocalizedDateFormatFromTemplate("yMMMM")
-
-    return formatter.string(from: date)
-}
 
 struct ReflectionListView: View {
     @EnvironmentObject var storage: ReflectionStorage
@@ -29,39 +12,36 @@ struct ReflectionListView: View {
     @State private var selectedYear = Calendar.current.component(.year, from: Date())
     @State private var selectedMonth = Calendar.current.component(.month, from: Date())
     @State private var selectedReflection: Reflection? = nil
-    @State private var isShowingDetail = false
     @State private var isShowingStatsView = false
-
-    // ⭐ ReflectionStorage에서 이미 필터링과 중복 제거가 완료된 데이터 사용
-    // 별도의 filteredReflections, uniqueReflections 로직 제거
 
     var body: some View {
         NavigationStack {
-            VStack(){
+            VStack {
                 Text("list_title")
-                    .font(.custom("BMYEONSUNG-OTF", size: 40))
+                    .font(AppFont.hand(40, relativeTo: .largeTitle))
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(AppColor.textPrimary)
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .center)
-                    .background(Color(hex: "#FFF9EC"))
-                
+                    .background(AppColor.background)
+
                 Spacer()
-                
+
                 Button(action: {
                     isShowingPicker = true
                 }) {
-                    Text("\(localizedYearMonth(year: selectedYear, month: selectedMonth)) ▼")
-                        .font(.custom("BMYEONSUNG-OTF", size: 20))
-                        .foregroundColor(.black)
+                    Text("\(Date.localizedYearMonth(year: selectedYear, month: selectedMonth)) ▼")
+                        .font(AppFont.hand(20, relativeTo: .body))
+                        .foregroundColor(AppColor.textPrimary)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                         .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(hex: "#FFFDF3"))
+                            RoundedRectangle(cornerRadius: AppRadius.field)
+                                .fill(AppColor.surface)
                                 .shadow(color: .gray.opacity(0.3), radius: 2, x: 0, y: 1)
                         )
                 }
+                .accessibilityLabel("조회할 연도와 월 선택")
                 .sheet(isPresented: $isShowingPicker) {
                     YearMonthPickerSheet(
                         selectedYear: $selectedYear,
@@ -73,72 +53,17 @@ struct ReflectionListView: View {
                     )
                 }
                 .navigationBarBackButtonHidden(true)
-                
-                List {
-                    ForEach(storage.reflections) { reflection in
-                        // ReflectionStorage에서 이미 정렬되고 중복 제거된 데이터 사용
-                        Button {
-                            selectedReflection = reflection
-                            isShowingDetail = true
-                        } label: {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.white)
-                                    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 1)
-                                HStack {
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        Text(reflection.date.formattedDate())
-                                            .font(.custom("BMYEONSUNG-OTF", size: 22))
-                                            .foregroundColor(.black)
 
-                                        Text(reflection.content.components(separatedBy: "\n").first ?? "")
-                                            .font(.custom("BMYEONSUNG-OTF", size: 18))
-                                            .foregroundColor(.black)
-                                            .lineLimit(1)
-                                    }
-
-                                    Spacer()
-
-                                    VStack {
-                                        HStack {
-                                            Spacer()
-                                            Text(reflection.emotion)
-                                                .font(.custom("BMYEONSUNG-OTF", size: 34))
-                                                .foregroundColor(.black)
-                                        }
-                                        
-                                    }
-                                }
-                                .padding()
-                            }
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets())
-                        .padding(.horizontal)
-                        .padding(.vertical, 4)
-                        .listRowBackground(Color.clear)
-                    }
-                    
+                if storage.reflections.isEmpty {
+                    // 해당 월에 기록이 없을 때의 빈 상태
+                    emptyState
+                } else {
+                    reflectionList
                 }
-                .scrollContentBackground(.hidden)
-                .background(Color(hex: "#FFF9EC"))
-                
             }
-            .scrollContentBackground(.hidden)
-            .background(Color(hex: "#FFF9EC").ignoresSafeArea())
+            .background(AppColor.background.ignoresSafeArea())
             .sheet(item: $selectedReflection) { reflection in
-                if let index = storage.reflections.firstIndex(where: { $0.id == reflection.id }) {
-                    ReflectionDetailViewWrapper(
-                        reflection: $storage.reflections[index],
-                        onUpdate: { updatedReflection in
-                            selectedReflection = updatedReflection
-                        },
-                        onDismiss: {
-                            selectedReflection = nil
-                        }
-                    )
-                }
+                ReflectionDetailView(reflection: reflection)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -147,9 +72,10 @@ struct ReflectionListView: View {
                     }) {
                         Image(systemName: "chart.bar.xaxis")
                             .font(.system(size: 24))
-                            .foregroundColor(Color(hex: "#FF8977"))
+                            .foregroundColor(AppColor.coral)
                             .symbolRenderingMode(.hierarchical)
                     }
+                    .accessibilityLabel("감정 통계 보기")
                 }
             }
             .sheet(isPresented: $isShowingStatsView) {
@@ -158,49 +84,84 @@ struct ReflectionListView: View {
             }
         }
         .onAppear {
-            // ⭐ 뷰가 나타날 때 선택된 년/월에 맞는 데이터 로드
             storage.fetchReflections(forYear: selectedYear, month: selectedMonth)
         }
         .onChange(of: selectedYear) { _, _ in
-            // ⭐ 년도가 변경될 때 데이터 다시 로드
             storage.fetchReflections(forYear: selectedYear, month: selectedMonth)
         }
         .onChange(of: selectedMonth) { _, _ in
-            // ⭐ 월이 변경될 때 데이터 다시 로드
             storage.fetchReflections(forYear: selectedYear, month: selectedMonth)
         }
     }
-}
 
-struct ReflectionDetailViewWrapper: View {
-    @Binding var reflection: Reflection
-    var onUpdate: (Reflection) -> Void
-    var onDismiss: () -> Void
+    private var emptyState: some View {
+        VStack(spacing: 12) {
+            Spacer()
+            Text("🌿")
+                .font(.system(size: 48))
+                .accessibilityHidden(true)
+            Text("list_empty_title")
+                .font(AppFont.hand(26, relativeTo: .title2))
+                .foregroundColor(AppColor.textPrimary)
+            Text("list_empty_subtitle")
+                .font(AppFont.hand(20, relativeTo: .body))
+                .foregroundColor(AppColor.textSecondary)
+            Spacer()
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+    }
 
-    var body: some View {
-        ReflectionDetailView(reflection: $reflection)
-            .onDisappear {
-                onUpdate(reflection)
-                onDismiss()
+    private var reflectionList: some View {
+        List {
+            ForEach(storage.reflections) { reflection in
+                Button {
+                    selectedReflection = reflection
+                } label: {
+                    ReflectionRow(reflection: reflection)
+                }
+                .buttonStyle(PlainButtonStyle())
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets())
+                .padding(.horizontal)
+                .padding(.vertical, 4)
+                .listRowBackground(Color.clear)
             }
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(AppColor.background)
     }
 }
 
+/// 리스트의 개별 회고 행
+private struct ReflectionRow: View {
+    let reflection: Reflection
 
-/*
- //기존의 클로저 방식
- struct ReflectionDetailViewWrapper_Closure: View {
-     @Binding var reflection: Reflection
-     var onUpdate: (Reflection) -> Void
-     var onDismiss: () -> Void
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: AppRadius.field)
+                .fill(AppColor.surface)
+                .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 1)
+            HStack {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(reflection.date.formattedDate())
+                        .font(AppFont.hand(22, relativeTo: .title3))
+                        .foregroundColor(AppColor.textPrimary)
 
-     var body: some View {
-         ReflectionDetailView(reflection: $reflection)
-             .onDisappear {
-                 onUpdate(reflection)
-                 onDismiss()
-             }
-     }
- }
- 
- */
+                    Text(reflection.content.components(separatedBy: "\n").first ?? "")
+                        .font(AppFont.hand(18, relativeTo: .body))
+                        .foregroundColor(AppColor.textPrimary)
+                        .lineLimit(1)
+                }
+
+                Spacer()
+
+                Text(reflection.emotion)
+                    .font(AppFont.hand(34, relativeTo: .title))
+                    .accessibilityLabel(EmotionType(rawValue: reflection.emotion)?.accessibilityName ?? reflection.emotion)
+            }
+            .padding()
+        }
+    }
+}

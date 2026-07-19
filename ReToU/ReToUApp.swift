@@ -10,7 +10,7 @@ import SwiftData
 
 @main
 struct ReToUApp: App {
-    @StateObject private var storage = ReflectionStorage(useDummy: true)
+    @StateObject private var storage = ReflectionStorage()
     
     var body: some Scene {
         WindowGroup {
