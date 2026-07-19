@@ -29,6 +29,58 @@ extension Date {
     }
 }
 
+// MARK: - 문어체 한국어 날짜 (인장 디자인의 세로쓰기·달력 헤더용)
+
+enum KoreanLiteraryDate {
+    private static let monthNames = [
+        "일월", "이월", "삼월", "사월", "오월", "유월",
+        "칠월", "팔월", "구월", "시월", "십일월", "십이월"
+    ]
+
+    private static let nativeNumbers = [
+        "한", "두", "세", "네", "다섯", "여섯", "일곱", "여덟", "아홉", "열",
+        "열한", "열두", "열세", "열네", "열다섯", "열여섯", "열일곱", "열여덟", "열아홉", "스무",
+        "스물한", "스물두", "스물세", "스물네", "스물다섯", "스물여섯", "스물일곱", "스물여덟", "스물아홉", "서른",
+        "서른한"
+    ]
+
+    private static let sinoDigits = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"]
+
+    /// 7 → "칠월"
+    static func monthName(_ month: Int) -> String {
+        guard (1...12).contains(month) else { return "\(month)월" }
+        return monthNames[month - 1]
+    }
+
+    /// 19 → "열아홉 번째 날"
+    static func dayPhrase(_ day: Int) -> String {
+        guard (1...31).contains(day) else { return "\(day)일" }
+        return "\(nativeNumbers[day - 1]) 번째 날"
+    }
+
+    /// 2026 → "이천이십육년"
+    static func yearPhrase(_ year: Int) -> String {
+        var result = ""
+        let thousands = year / 1000
+        let hundreds = (year % 1000) / 100
+        let tens = (year % 100) / 10
+        let ones = year % 10
+        if thousands > 0 { result += (thousands == 1 ? "천" : sinoDigits[thousands] + "천") }
+        if hundreds > 0 { result += (hundreds == 1 ? "백" : sinoDigits[hundreds] + "백") }
+        if tens > 0 { result += (tens == 1 ? "십" : sinoDigits[tens] + "십") }
+        if ones > 0 { result += sinoDigits[ones] }
+        return result + "년"
+    }
+
+    /// "토요일"
+    static func weekdayName(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.dateFormat = "EEEE"
+        return formatter.string(from: date)
+    }
+}
+
 extension DateFormatter {
     private static var isKorean: Bool {
         Locale.current.language.languageCode?.identifier == "ko"

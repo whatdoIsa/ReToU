@@ -2,7 +2,7 @@
 //  ReflectionEditView.swift
 //  ReToU
 //
-//  Created by Dean_SSONG on 4/20/25.
+//  회고 수정 — 그때의 마음을 다시 담는다
 //
 
 import SwiftUI
@@ -21,77 +21,76 @@ struct ReflectionEditView: View {
         _reflectionText = State(initialValue: reflection.content)
     }
 
-    /// 감정 선택 + 내용 입력이 모두 완료되어야 저장 가능
     private var canSubmit: Bool {
         selectedEmotion != nil
             && !reflectionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            NavigationStack {
-                ScrollView {
-                    VStack(spacing: 28) {
-                        Text("edit_title")
-                            .font(AppFont.hand(40, relativeTo: .largeTitle))
-                            .foregroundColor(AppColor.textPrimary.opacity(0.7))
+        ZStack {
+            AppColor.paper.ignoresSafeArea()
+            PaperGrain().ignoresSafeArea()
 
-                        Text(reflection.date.formattedDate())
-                            .font(AppFont.hand(26, relativeTo: .title2))
-                            .foregroundColor(AppColor.textPrimary)
-
-                        EmotionPicker(selection: $selectedEmotion)
-
-                        TextEditor(text: $reflectionText)
-                            .frame(height: 200)
-                            .padding()
-                            .scrollContentBackground(.hidden)
-                            .background(AppColor.background)
-                            .foregroundColor(AppColor.textPrimary)
-                            .cornerRadius(AppRadius.field)
-                            .padding(.horizontal)
-
-                        Button(action: submit) {
-                            Text("edit_button")
-                                .font(AppFont.hand(22, relativeTo: .title3))
-                                .foregroundColor(.white)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(canSubmit ? AppColor.accent : AppColor.accent.opacity(0.4))
-                                .clipShape(Capsule())
-                        }
-                        .padding(.horizontal)
-                        .frame(width: 240, height: 54)
-                        .disabled(!canSubmit)
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Text("edit_title")
+                        .font(AppFont.serif(24, relativeTo: .title))
+                        .foregroundColor(AppColor.ink)
+                    Spacer()
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(AppColor.inkFaint)
                     }
-                    .padding(.top, 60)
-                    .navigationBarBackButtonHidden(true)
+                    .accessibilityLabel("닫기")
                 }
-                .onTapGesture {
-                    UIApplication.shared.endEditing()
+                .padding(.top, 12)
+
+                Text(reflection.date.formattedDate() + " " + KoreanLiteraryDate.weekdayName(reflection.date))
+                    .font(AppFont.label(12, weight: .bold))
+                    .foregroundColor(AppColor.inkFaint)
+                    .padding(.top, 4)
+
+                EmotionSealPicker(selection: $selectedEmotion)
+                    .padding(.top, 20)
+
+                Divider()
+                    .overlay(AppColor.hairline)
+                    .padding(.top, 16)
+
+                ZStack(alignment: .topLeading) {
+                    RuledPaper(lineSpacing: 30)
+                    TextEditor(text: $reflectionText)
+                        .font(AppFont.serifBody(15, relativeTo: .body))
+                        .lineSpacing(9)
+                        .foregroundColor(AppColor.ink)
+                        .scrollContentBackground(.hidden)
+                        .background(Color.clear)
                 }
-                .background(AppColor.background.ignoresSafeArea())
-                // 저장 실패를 사용자에게 명확히 전달
-                .alert("error_title", isPresented: .init(
-                    get: { saveErrorMessage != nil },
-                    set: { if !$0 { saveErrorMessage = nil } }
-                )) {
-                    Button("error_confirm", role: .cancel) {}
-                } message: {
-                    Text(saveErrorMessage ?? "")
+                .frame(maxHeight: .infinity)
+
+                Button(action: submit) {
+                    Text("edit_button")
                 }
+                .buttonStyle(InkButtonStyle(
+                    background: canSubmit ? AppColor.ink : AppColor.ink.opacity(0.35)
+                ))
+                .disabled(!canSubmit)
+                .padding(.vertical, 12)
             }
-            Button(action: {
-                dismiss()
-            }) {
-                Image(systemName: "xmark")
-                    .foregroundColor(.gray)
-                    .padding(10)
-                    .background(Color.gray.opacity(0.2))
-                    .clipShape(Circle())
-            }
-            .accessibilityLabel("닫기")
-            .padding()
+            .padding(.horizontal, 22)
+            .onTapGesture { UIApplication.shared.endEditing() }
+        }
+        .navigationBarBackButtonHidden(true)
+        .alert("error_title", isPresented: .init(
+            get: { saveErrorMessage != nil },
+            set: { if !$0 { saveErrorMessage = nil } }
+        )) {
+            Button("error_confirm", role: .cancel) {}
+        } message: {
+            Text(saveErrorMessage ?? "")
         }
     }
 
@@ -102,6 +101,7 @@ struct ReflectionEditView: View {
 
         switch storage.update(reflection: reflection, content: trimmedText, emotion: emotion.rawValue) {
         case .success:
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
             dismiss()
         case .failure(let error):
             saveErrorMessage = error.userFriendlyMessage

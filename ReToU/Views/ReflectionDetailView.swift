@@ -1,4 +1,31 @@
+//
+//  ReflectionDetailView.swift
+//  ReToU
+//
+//  회고 상세 — 책장 한 페이지. 세로쓰기 날짜와 밑줄 글귀 버튼.
+//
+
 import SwiftUI
+
+/// 세로쓰기 텍스트 (책장 여백의 날짜)
+struct VerticalText: View {
+    let text: String
+    var font: Font
+    var color: Color
+    var spacing: CGFloat = 2
+
+    var body: some View {
+        VStack(spacing: spacing) {
+            ForEach(Array(text.enumerated()), id: \.offset) { _, char in
+                Text(String(char))
+                    .font(font)
+                    .foregroundColor(color)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(text)
+    }
+}
 
 struct ReflectionDetailView: View {
     let reflection: Reflection
@@ -8,99 +35,99 @@ struct ReflectionDetailView: View {
     @State private var isEditing = false
     @State private var deleteErrorMessage: String?
 
+    private var emotion: EmotionType {
+        EmotionType(rawValue: reflection.emotion) ?? .neutral
+    }
+
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .topTrailing) {
-                AppColor.background.ignoresSafeArea()
+            ZStack {
+                AppColor.paper.ignoresSafeArea()
+                PaperGrain().ignoresSafeArea()
 
-                VStack(spacing: 28) {
-                    Text("detail_title")
-                        .font(AppFont.hand(48, relativeTo: .largeTitle))
-                        .foregroundColor(AppColor.textPrimary.opacity(0.7))
-                        .padding(.top, 10)
+                HStack(alignment: .top, spacing: 14) {
+                    // 본문 영역
+                    VStack(alignment: .leading, spacing: 0) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(AppColor.inkFaint)
+                        }
+                        .accessibilityLabel("닫기")
+                        .padding(.top, 8)
 
-                    Text("detail_subtitle")
-                        .font(AppFont.hand(28, relativeTo: .title2))
-                        .foregroundColor(AppColor.textPrimary)
-
-                    ZStack(alignment: .topLeading) {
-                        RoundedRectangle(cornerRadius: AppRadius.card)
-                            .fill(AppColor.surface)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: AppRadius.card)
-                                    .stroke(Color.gray.opacity(0.4), lineWidth: 1)
+                        HStack(spacing: 9) {
+                            EmotionSealView(
+                                emotion: emotion, style: .stamped, size: 38,
+                                rotationSeed: reflection.dateKey.hashValue
                             )
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack(alignment: .top) {
-                                Text(reflection.date.formattedDate())
-                                    .font(AppFont.hand(28, relativeTo: .title2))
-                                    .foregroundColor(AppColor.textPrimary)
-                                Spacer()
-                                Text(reflection.emotion)
-                                    .font(AppFont.hand(44, relativeTo: .largeTitle))
-                                    .accessibilityLabel(EmotionType(rawValue: reflection.emotion)?.accessibilityName ?? reflection.emotion)
+                            Text(emotion.stampedDayLabel)
+                                .font(AppFont.label(11, weight: .bold))
+                                .foregroundColor(emotion.sealColor)
+                        }
+                        .padding(.top, 18)
+
+                        ScrollView(showsIndicators: false) {
+                            ZStack(alignment: .topLeading) {
+                                RuledPaper(lineSpacing: 30)
+                                Text(reflection.content)
+                                    .font(AppFont.serifBody(15, relativeTo: .body))
+                                    .lineSpacing(9)
+                                    .foregroundColor(AppColor.ink)
+                                    .padding(.top, 5)
+                                    .frame(maxWidth: .infinity, alignment: .topLeading)
                             }
-
-                            Text(reflection.content)
-                                .font(AppFont.hand(22, relativeTo: .title3))
-                                .foregroundColor(AppColor.textPrimary)
-                                .fixedSize(horizontal: false, vertical: true)
                         }
-                        .padding(.vertical, 20)
-                        .padding(.horizontal, 28)
-                    }
-                    .frame(height: 320)
+                        .padding(.top, 16)
 
-                    HStack(spacing: 20) {
-                        Button("detail_button_edit") {
-                            isEditing = true
-                        }
-                        .font(AppFont.hand(22, relativeTo: .title3))
-                        .foregroundColor(.white)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 10)
-                        .frame(width: 140)
-                        .background(AppColor.accent)
-                        .clipShape(Capsule())
-
-                        Button("detail_button_delete") {
-                            showDeleteAlert = true
-                        }
-                        .font(AppFont.hand(22, relativeTo: .title3))
-                        .foregroundColor(.white)
-                        .padding(.vertical, 10)
-                        .frame(width: 140)
-                        .background(AppColor.coral)
-                        .clipShape(Capsule())
-                        .alert("delete_alert_title \n delete_alert_subtitle", isPresented: $showDeleteAlert) {
-                            Button("delete_alert_confirm", role: .destructive) {
-                                deleteReflection()
+                        HStack(spacing: 22) {
+                            Button {
+                                isEditing = true
+                            } label: {
+                                underlined("detail_button_edit", color: AppColor.ink)
                             }
-                            Button("delete_alert_cancel", role: .cancel) {}
+                            Button {
+                                showDeleteAlert = true
+                            } label: {
+                                underlined("detail_button_delete", color: AppColor.sealRed)
+                            }
                         }
+                        .padding(.vertical, 14)
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.horizontal, 16)
-                }
-                .padding(.top, 60)
-                .padding()
 
-                Button(action: {
-                    dismiss()
-                }) {
-                    Image(systemName: "xmark")
-                        .foregroundColor(.gray)
-                        .padding(10)
-                        .background(Color.gray.opacity(0.2))
-                        .clipShape(Circle())
+                    // 세로쓰기 날짜
+                    VStack(alignment: .center, spacing: 14) {
+                        VerticalText(
+                            text: verticalDateText,
+                            font: AppFont.serif(16, relativeTo: .title3),
+                            color: AppColor.ink
+                        )
+                        VerticalText(
+                            text: verticalSubText,
+                            font: AppFont.serifBody(10, relativeTo: .caption),
+                            color: AppColor.inkFaint
+                        )
+                        Spacer()
+                    }
+                    .padding(.top, 34)
+                    .padding(.leading, 12)
+                    .overlay(alignment: .leading) {
+                        Rectangle().fill(AppColor.hairline).frame(width: 1)
+                    }
                 }
-                .accessibilityLabel("닫기")
-                .padding()
+                .padding(.horizontal, 22)
             }
             .navigationDestination(isPresented: $isEditing) {
                 ReflectionEditView(reflection: reflection)
             }
-            // 삭제 실패를 사용자에게 명확히 전달
+            .alert("delete_alert_title \n delete_alert_subtitle", isPresented: $showDeleteAlert) {
+                Button("delete_alert_confirm", role: .destructive) {
+                    deleteReflection()
+                }
+                Button("delete_alert_cancel", role: .cancel) {}
+            }
             .alert("error_title", isPresented: .init(
                 get: { deleteErrorMessage != nil },
                 set: { if !$0 { deleteErrorMessage = nil } }
@@ -110,6 +137,26 @@ struct ReflectionDetailView: View {
                 Text(deleteErrorMessage ?? "")
             }
         }
+    }
+
+    private var verticalDateText: String {
+        let month = Calendar.current.component(.month, from: reflection.date)
+        let day = Calendar.current.component(.day, from: reflection.date)
+        return "\(KoreanLiteraryDate.monthName(month)) \(KoreanLiteraryDate.dayPhrase(day))"
+    }
+
+    private var verticalSubText: String {
+        let year = Calendar.current.component(.year, from: reflection.date)
+        return "\(KoreanLiteraryDate.yearPhrase(year)) \(KoreanLiteraryDate.weekdayName(reflection.date))"
+    }
+
+    private func underlined(_ key: LocalizedStringKey, color: Color) -> some View {
+        Text(key)
+            .font(AppFont.serif(14, relativeTo: .subheadline))
+            .foregroundColor(color)
+            .overlay(alignment: .bottom) {
+                Rectangle().fill(color).frame(height: 1.5).offset(y: 3)
+            }
     }
 
     private func deleteReflection() {

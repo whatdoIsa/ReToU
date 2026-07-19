@@ -15,8 +15,20 @@
 "auth_failed_message" = "Authentication is required to protect your reflections.";
 "auth_retry" = "Try Again";
 
+//Tabs
+"tab_today" = "Today";
+"tab_records" = "Records";
+"tab_mind" = "Mind";
+
 //Write
 "write_title" = "How are you today?";
+"today_done_title" = "Today's you,\nremembered";
+"prompt_change" = "New question ↺";
+"prompt_1" = "The moment that stayed with you today,";
+"prompt_2" = "If you could say one thing to yourself today,";
+"prompt_3" = "The moment you felt most grateful today,";
+"prompt_4" = "A feeling you'd like to let go of today,";
+"prompt_5" = "Words you'd like to leave for tomorrow's you,";
 "write_date_format" = "MMMM d, yyyy";
 "write_example_1" = "e.g.) How was your day?";
 "write_example_2" = "e.g.) Was there anything hard or happy today?";
@@ -58,6 +70,19 @@
 "emotion_feedback_sad" = "You’ve had many sad days.\n Talking to someone may help lighten your heart.";
 "emotion_feedback_angry" = "You’ve felt angry quite often.\n Finding a way to release stress might help.";
 "emotion_feedback_empty" = "Not enough reflections this month yet.";
+
+//Mind
+"mind_letter_title" = "To you, this month";
+"mind_letter_signature" = "— from Today's You";
+"mind_privacy_note" = "Analyzed on your device only · never sent anywhere";
+"mind_empty_title" = "No feelings recorded this month yet";
+
+//Stamped day
+"stamped_happy" = "A day stamped happy";
+"stamped_tired" = "A day stamped tired";
+"stamped_neutral" = "A day stamped neutral";
+"stamped_sad" = "A day stamped sad";
+"stamped_angry" = "A day stamped angry";
 
 //Emotion (accessibility)
 "emotion_happy" = "Happy";

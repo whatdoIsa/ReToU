@@ -51,6 +51,20 @@ final class ReflectionUseCase: ObservableObject {
     func hasTodayReflection() -> Bool {
         return repository.hasReflectionForToday()
     }
+
+    /// 오늘 작성된 회고 UseCase
+    func todayReflection() -> Reflection? {
+        return repository.reflectionForToday()
+    }
+
+    /// 첫 기록부터 오늘까지 함께한 일수 (기록이 없으면 nil)
+    func daysTogether() -> Int? {
+        guard let first = repository.firstReflectionDate() else { return nil }
+        let start = Calendar.current.startOfDay(for: first)
+        let today = Calendar.current.startOfDay(for: Date())
+        let days = Calendar.current.dateComponents([.day], from: start, to: today).day ?? 0
+        return days + 1
+    }
     
     // MARK: - Analytics Use Cases
     

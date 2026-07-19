@@ -156,11 +156,30 @@ final class SwiftDataReflectionRepository: ObservableObject {
     
     /// 오늘 회고 존재 여부 확인
     func hasReflectionForToday() -> Bool {
+        return reflectionForToday() != nil
+    }
+
+    /// 오늘 작성된 회고 반환
+    func reflectionForToday() -> Reflection? {
         do {
-            return try fetchReflection(onSameDayAs: Date()) != nil
+            return try fetchReflection(onSameDayAs: Date())
         } catch {
-            print("❌ Error checking today's reflection: \(error)")
-            return false
+            print("❌ Error fetching today's reflection: \(error)")
+            return nil
+        }
+    }
+
+    /// 가장 오래된 회고의 날짜 (함께한 일수 계산용)
+    func firstReflectionDate() -> Date? {
+        do {
+            var fetchRequest = FetchDescriptor<Reflection>(
+                sortBy: [SortDescriptor(\.date, order: .forward)]
+            )
+            fetchRequest.fetchLimit = 1
+            return try modelContext.fetch(fetchRequest).first?.date
+        } catch {
+            print("❌ Error fetching first reflection date: \(error)")
+            return nil
         }
     }
     

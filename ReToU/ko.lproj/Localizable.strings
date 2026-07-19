@@ -15,8 +15,20 @@
 "auth_failed_message" = "회고를 보호하기 위해 인증이 필요해요.";
 "auth_retry" = "다시 시도";
 
+//Tabs
+"tab_today" = "오늘";
+"tab_records" = "기록";
+"tab_mind" = "마음";
+
 //Write
 "write_title" = "오늘의 넌 어때?";
+"today_done_title" = "오늘의 넌,\n기억해뒀어";
+"prompt_change" = "질문 바꾸기 ↺";
+"prompt_1" = "오늘 마음에 가장 오래 남은 장면은,";
+"prompt_2" = "오늘의 나에게 한마디를 건넨다면,";
+"prompt_3" = "오늘 가장 고마웠던 순간은,";
+"prompt_4" = "오늘 놓아주고 싶은 마음이 있다면,";
+"prompt_5" = "내일의 나에게 남기고 싶은 말은,";
 "write_date_format" = "yyyy년 M월 d일";
 "write_example_1" = "예시) 오늘 하루는 어땠나요?";
 "write_example_2" = "예시) 오늘 힘들었거나 행복했던 일이 있었나요?";
@@ -57,6 +69,19 @@
 "emotion_feedback_sad" = "슬픈 날이 많았어요.\n 마음을 나눌 누군가와 대화를 해보세요.";
 "emotion_feedback_angry" = "화가 났던 날이 많네요.\n 스트레스 해소 방법을 찾아보면 도움이 될 거예요!";
 "emotion_feedback_empty" = "이번 달에는 회고 데이터가 부족해요.";
+
+//Mind (마음 탭)
+"mind_letter_title" = "이번 달의 너에게";
+"mind_letter_signature" = "— 오늘의 넌 드림";
+"mind_privacy_note" = "기기 안에서만 분석 · 어디로도 보내지 않아요";
+"mind_empty_title" = "아직 이 달의 마음이 없어요";
+
+//Stamped day (상세)
+"stamped_happy" = "행복을 찍은 날";
+"stamped_tired" = "피곤을 찍은 날";
+"stamped_neutral" = "보통을 찍은 날";
+"stamped_sad" = "슬픔을 찍은 날";
+"stamped_angry" = "화남을 찍은 날";
 
 //Emotion (접근성)
 "emotion_happy" = "행복";

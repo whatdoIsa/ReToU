@@ -10,32 +10,30 @@ import LocalAuthentication
 
 struct LaunchView: View {
     @EnvironmentObject private var storage: ReflectionStorage
-    @State private var routeToWrite = false // 회고 작성 페이지로 이동할지 여부
-    @State private var routeToList = false // 회고 리스트 페이지로 이동할지 여부
-    @State private var showAuthFailedAlert = false // 인증 실패 알림 표시 여부
+    @State private var isAuthenticated = false
+    @State private var showAuthFailedAlert = false
 
     var body: some View {
         ZStack {
-            AppColor.background.ignoresSafeArea()
-            // 사용자 인증이 완료했을 때
-            if routeToWrite { // 회고가 없다면 작성 페이지로 이동
-                ReflectionWriteView()
-            } else if routeToList {  // 회고가 있다면 리스트 페이지로 이동
-                ReflectionListView()
+            AppColor.paper.ignoresSafeArea()
+
+            if isAuthenticated {
+                MainTabView()
             } else {
-                VStack(spacing: 16) {
+                VStack(spacing: 18) {
                     Spacer()
+
+                    EmotionSealView(emotion: .happy, style: .stamped, size: 64, rotationSeed: 3)
 
                     Text(LocalizedStringKey("launch_title"))
-                        .font(AppFont.hand(48, relativeTo: .largeTitle))
-                        .foregroundColor(AppColor.textPrimary)
+                        .font(AppFont.serif(36, relativeTo: .largeTitle))
+                        .foregroundColor(AppColor.ink)
 
                     Text("launch_subtitle")
-                        .font(AppFont.hand(24, relativeTo: .title3))
-                        .foregroundColor(AppColor.textSecondary)
+                        .font(AppFont.serifBody(15, relativeTo: .title3))
+                        .foregroundColor(AppColor.inkSecondary)
 
                     Spacer()
-
                     Spacer().frame(height: 60)
                 }
                 .padding()
@@ -56,21 +54,20 @@ struct LaunchView: View {
 
     /// 생체 인증 또는 패스코드 인증 수행
     private func authenticate() {
+        // 시뮬레이터에는 생체인증/암호가 없어 개발 확인이 막히므로 건너뜀 (실기기 영향 없음)
+        #if targetEnvironment(simulator)
+        withAnimation(.easeOut(duration: 0.25)) { isAuthenticated = true }
+        #else
         AuthManager.shared.authenticateWithBiometricsOrPasscode(
             onSuccess: {
-                // 인증 성공 시 즉시 다음 화면으로 전환
-                if storage.hasReflectionForToday() {
-                    // 오늘의 회고가 있다면 리스트로 이동
-                    routeToList = true
-                } else {
-                    // 오늘의 회고가 없다면 작성 페이지로 이동
-                    routeToWrite = true
+                withAnimation(.easeOut(duration: 0.25)) {
+                    isAuthenticated = true
                 }
             },
             onFailure: {
-                // 인증 실패 시 알림 표시
                 showAuthFailedAlert = true
             }
         )
+        #endif
     }
 }
