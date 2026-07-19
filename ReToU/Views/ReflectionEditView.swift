@@ -101,6 +101,7 @@ struct ReflectionEditView: View {
 
         switch storage.update(reflection: reflection, content: trimmedText, emotion: emotion.rawValue) {
         case .success:
+            Analytics.track(.reflectionEdited)
             UINotificationFeedbackGenerator().notificationOccurred(.success)
             dismiss()
         case .failure(let error):

@@ -226,6 +226,9 @@ struct TodayView: View {
 
         switch storage.add(content: trimmedText, emotion: emotion.rawValue, date: Date()) {
         case .success:
+            Analytics.track(.reflectionSaved)
+            // 오늘 기록 완료 → 오늘 리마인더는 취소하고 이후 일정만 유지
+            ReminderManager.shared.reschedule(hasWrittenToday: true)
             UINotificationFeedbackGenerator().notificationOccurred(.success)
             withAnimation(.spring(response: 0.35, dampingFraction: 0.6)) {
                 showStampOverlay = true

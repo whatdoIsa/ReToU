@@ -15,6 +15,47 @@
 "auth_failed_message" = "Authentication is required to protect your reflections.";
 "auth_retry" = "Try Again";
 
+//Lock & PIN
+"lock_unlock" = "Unlock";
+"lock_use_faceid" = "Use Face ID";
+"pin_enter" = "Enter your passcode";
+"pin_enter_new" = "Enter a new 6-digit passcode";
+"pin_confirm" = "Enter it once more";
+"pin_wrong" = "Passcodes don't match. Try again";
+
+//Onboarding
+"onboarding_concept_title" = "Once a day,\nlike a stamp";
+"onboarding_concept_body" = "Pick today's feeling, leave a line,\nand the day gets its seal.\nJust once a day — that's what makes it precious.";
+"onboarding_next" = "Next";
+"onboarding_reminder_title" = "Want a gentle\nreminder?";
+"onboarding_reminder_body" = "A quiet nudge at your chosen time.\nNever on days you've already stamped.";
+"onboarding_reminder_enable" = "Remind me at this time";
+"onboarding_skip" = "Maybe later";
+"onboarding_lock_title" = "Lock your\ndiary?";
+"onboarding_lock_body" = "Face ID plus a 6-digit passcode —\nonly you can open it.\nYou can change this anytime in Settings.";
+"onboarding_lock_enable" = "Set up lock";
+"onboarding_start" = "Start without lock";
+
+//Settings
+"settings_title" = "Settings";
+"settings_section_reminder" = "Reminder";
+"settings_reminder_toggle" = "Daily reminder";
+"settings_reminder_subtitle" = "Never sent on days you've already written";
+"settings_reminder_time" = "Time";
+"settings_section_lock" = "Lock";
+"settings_lock_toggle" = "Lock diary";
+"settings_lock_subtitle" = "Face ID + 6-digit passcode";
+"settings_change_pin" = "Change passcode";
+"settings_section_about" = "About";
+"settings_version" = "Version";
+"settings_privacy_note" = "Everything stays on this device only";
+"settings_notification_denied_title" = "Notifications are off";
+"settings_notification_denied_message" = "Allow them in Settings > Today's You > Notifications.";
+
+//Reminder notification
+"reminder_title" = "Today's You";
+"reminder_body" = "Today's stamp is still waiting. One line is enough.";
+
 //Tabs
 "tab_today" = "Today";
 "tab_records" = "Records";

@@ -11,6 +11,27 @@ import LocalAuthentication
 class AuthManager {
     static let shared = AuthManager()
 
+    /// 생체 인증만 시도 (실패 시 앱 자체 비밀번호 폴백은 호출자가 처리)
+    func authenticateWithBiometricsOnly(
+        onSuccess: @escaping () -> Void,
+        onFailure: @escaping () -> Void
+    ) {
+        let context = LAContext()
+        var error: NSError?
+
+        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
+            DispatchQueue.main.async { onFailure() }
+            return
+        }
+
+        let reason = "회고 잠금 해제를 위해 인증이 필요합니다"
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, _ in
+            DispatchQueue.main.async {
+                success ? onSuccess() : onFailure()
+            }
+        }
+    }
+
     // 생체 인증 또는 패스코드 인증 수행
     func authenticateWithBiometricsOrPasscode(
         onSuccess: @escaping () -> Void,

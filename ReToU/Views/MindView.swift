@@ -40,6 +40,8 @@ struct MindView: View {
             && month == calendar.component(.month, from: Date())
     }
 
+    @State private var showSettings = false
+
     var body: some View {
         ZStack {
             AppColor.paper.ignoresSafeArea()
@@ -97,9 +99,20 @@ struct MindView: View {
                 }
                 .disabled(isCurrentMonth)
                 .accessibilityLabel("다음 달")
+
+                Button { showSettings = true } label: {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(AppColor.inkSecondary)
+                }
+                .accessibilityLabel("설정")
             }
         }
         .padding(.top, 12)
+        .sheet(isPresented: $showSettings) {
+            SettingsView()
+                .environmentObject(storage)
+        }
     }
 
     private var distribution: some View {

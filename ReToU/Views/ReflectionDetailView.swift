@@ -162,6 +162,9 @@ struct ReflectionDetailView: View {
     private func deleteReflection() {
         switch storage.delete(reflection: reflection) {
         case .success:
+            Analytics.track(.reflectionDeleted)
+            // 오늘 기록을 지웠다면 오늘 리마인더가 되살아나야 함
+            ReminderManager.shared.reschedule(hasWrittenToday: storage.hasReflectionForToday())
             dismiss()
         case .failure(let error):
             deleteErrorMessage = error.userFriendlyMessage

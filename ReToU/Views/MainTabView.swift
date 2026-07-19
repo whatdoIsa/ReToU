@@ -50,10 +50,12 @@ struct MainTabView: View {
                 .tag(Tab.mind)
         }
         .tint(AppColor.ink)
-        #if DEBUG
         .onAppear {
+            #if DEBUG
             DebugLaunchOptions.seedDemoDataIfNeeded(using: storage)
+            #endif
+            // 앱을 열 때마다 향후 14일 리마인더 창을 앞으로 굴림
+            ReminderManager.shared.reschedule(hasWrittenToday: storage.hasReflectionForToday())
         }
-        #endif
     }
 }
