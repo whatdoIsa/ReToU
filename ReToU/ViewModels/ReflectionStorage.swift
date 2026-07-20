@@ -33,6 +33,19 @@ class ReflectionStorage: ObservableObject {
         return useCase.daysTogether()
     }
 
+    /// "지난 오늘" — 이전 연도들의 같은 날짜 회고
+    func reflectionsOnThisDay() -> [Reflection] {
+        return useCase.reflectionsOnThisDay()
+    }
+
+    /// 전체 기록 (CSV 내보내기용)
+    func allReflections() -> [Reflection] {
+        if case .success(let reflections) = useCase.getAllReflections() {
+            return reflections
+        }
+        return []
+    }
+
     /// ⭐ 핵심: CreateOrUpdate 패턴으로 "하루에 1개 기록" 규칙 보장
     /// Domain 레벨에서 감정 선택 필수 검증
     func add(content: String, emotion: String, date: Date) -> Result<Reflection, ReflectionError> {

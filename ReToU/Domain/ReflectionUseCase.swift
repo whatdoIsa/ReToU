@@ -57,6 +57,11 @@ final class ReflectionUseCase: ObservableObject {
         return repository.reflectionForToday()
     }
 
+    /// "지난 오늘" — 이전 연도들의 같은 날짜 회고 UseCase
+    func reflectionsOnThisDay() -> [Reflection] {
+        return repository.reflectionsOnThisDay()
+    }
+
     /// 첫 기록부터 오늘까지 함께한 일수 (기록이 없으면 nil)
     func daysTogether() -> Int? {
         guard let first = repository.firstReflectionDate() else { return nil }

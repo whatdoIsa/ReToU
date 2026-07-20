@@ -50,6 +50,9 @@
 "settings_icloud_title" = "iCloud 백업";
 "settings_icloud_on" = "기기의 Apple 계정으로 자동 백업돼요. 폰이 바뀌어도 기록은 그대로예요.";
 "settings_icloud_off" = "iCloud를 사용할 수 없어 이 기기에만 저장돼요. 설정 앱에서 iCloud에 로그인해주세요.";
+"settings_section_data" = "데이터";
+"settings_export_csv" = "CSV로 내보내기";
+"settings_export_subtitle" = "전체 기록을 파일로 저장하거나 공유해요";
 "settings_section_about" = "정보";
 "settings_version" = "버전";
 "settings_privacy_note" = "모든 기록은 이 기기 안에만 저장돼요";

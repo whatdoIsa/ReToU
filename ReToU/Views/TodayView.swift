@@ -22,6 +22,8 @@ struct TodayView: View {
     @State private var todayReflection: Reflection?
     @State private var showStampOverlay = false
     @State private var isEditingToday = false
+    @State private var pastReflections: [Reflection] = []
+    @State private var selectedPastReflection: Reflection?
 
     private static let prompts: [String] = [
         String(localized: "prompt_1", defaultValue: "오늘 마음에 가장 오래 남은 장면은,"),
@@ -187,6 +189,39 @@ struct TodayView: View {
             .frame(maxHeight: .infinity, alignment: .topLeading)
             .padding(.top, 14)
 
+            // 지난 오늘 — 이전 연도들의 같은 날 기록
+            if let past = pastReflections.first,
+               let pastEmotion = EmotionType(rawValue: past.emotion) {
+                Divider().overlay(AppColor.hairline)
+                Button {
+                    selectedPastReflection = past
+                    Analytics.track(.pastTodayViewed)
+                } label: {
+                    HStack(spacing: 10) {
+                        EmotionSealView(
+                            emotion: pastEmotion, style: .outline, size: 30,
+                            rotationSeed: past.dateKey.hashValue
+                        )
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("\(yearsAgo(past))년 전 오늘의 넌")
+                                .font(AppFont.label(11, weight: .bold))
+                                .foregroundColor(AppColor.inkFaint)
+                            Text(past.content.components(separatedBy: "\n").first ?? "")
+                                .font(AppFont.serifBody(13, relativeTo: .subheadline))
+                                .foregroundColor(AppColor.ink)
+                                .lineLimit(1)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(AppColor.inkFaint)
+                    }
+                    .padding(.vertical, 10)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("\(yearsAgo(past))년 전 오늘의 기록 보기")
+            }
+
             Button {
                 isEditingToday = true
             } label: {
@@ -206,12 +241,23 @@ struct TodayView: View {
                     .environmentObject(storage)
             }
         }
+        .sheet(item: $selectedPastReflection) { reflection in
+            ReflectionDetailView(reflection: reflection)
+                .environmentObject(storage)
+        }
+    }
+
+    private func yearsAgo(_ reflection: Reflection) -> Int {
+        let currentYear = Calendar.current.component(.year, from: Date())
+        let pastYear = Calendar.current.component(.year, from: reflection.date)
+        return max(1, currentYear - pastYear)
     }
 
     // MARK: - Actions
 
     private func refresh() {
         todayReflection = storage.todayReflection()
+        pastReflections = storage.reflectionsOnThisDay()
         if let reflection = todayReflection {
             selectedEmotion = EmotionType(rawValue: reflection.emotion)
             reflectionText = reflection.content

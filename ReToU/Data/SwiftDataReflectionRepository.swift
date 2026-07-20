@@ -169,6 +169,31 @@ final class SwiftDataReflectionRepository: ObservableObject {
         }
     }
 
+    /// "지난 오늘" — 이전 연도들의 같은 월/일에 작성된 회고 (최근 연도 순)
+    func reflectionsOnThisDay(reference: Date = Date()) -> [Reflection] {
+        guard let firstDate = firstReflectionDate() else { return [] }
+
+        let calendar = Calendar.current
+        let firstYear = calendar.component(.year, from: firstDate)
+        let currentYear = calendar.component(.year, from: reference)
+        let month = calendar.component(.month, from: reference)
+        let day = calendar.component(.day, from: reference)
+
+        guard firstYear < currentYear else { return [] }
+
+        var results: [Reflection] = []
+        for year in stride(from: currentYear - 1, through: firstYear, by: -1) {
+            // 2/29 등 해당 연도에 없는 날짜는 자연히 건너뜀
+            guard let pastDate = calendar.date(from: DateComponents(year: year, month: month, day: day, hour: 12)),
+                  calendar.component(.day, from: pastDate) == day else { continue }
+
+            if let reflection = try? fetchReflection(onSameDayAs: pastDate) {
+                results.append(reflection)
+            }
+        }
+        return results
+    }
+
     /// 가장 오래된 회고의 날짜 (함께한 일수 계산용)
     func firstReflectionDate() -> Date? {
         do {

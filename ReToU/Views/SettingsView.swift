@@ -16,6 +16,7 @@ struct SettingsView: View {
     @State private var reminderTime = AppSettings.reminderTime
     @State private var showPinSetup = false
     @State private var showPermissionDeniedAlert = false
+    @State private var exportURL: URL?
 
     var body: some View {
         ZStack {
@@ -120,6 +121,32 @@ struct SettingsView: View {
                             }
                         }
 
+                        // MARK: 데이터
+                        section("settings_section_data") {
+                            Button {
+                                if let url = CSVExporter.export(storage.allReflections()) {
+                                    exportURL = url
+                                    Analytics.track(.csvExported)
+                                }
+                            } label: {
+                                HStack(alignment: .top) {
+                                    VStack(alignment: .leading, spacing: 3) {
+                                        Text("settings_export_csv")
+                                            .font(AppFont.label(14, weight: .bold))
+                                            .foregroundColor(AppColor.ink)
+                                        Text("settings_export_subtitle")
+                                            .font(AppFont.label(11, weight: .medium))
+                                            .foregroundColor(AppColor.inkFaint)
+                                    }
+                                    Spacer()
+                                    Image(systemName: "square.and.arrow.up")
+                                        .font(.system(size: 16, weight: .medium))
+                                        .foregroundColor(AppColor.inkSecondary)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+
                         // MARK: 정보
                         section("settings_section_about") {
                             HStack {
@@ -160,6 +187,9 @@ struct SettingsView: View {
                     AppSettings.lockEnabled = false
                 }
             }
+        }
+        .sheet(item: $exportURL) { url in
+            ShareSheet(items: [url])
         }
         .alert("settings_notification_denied_title", isPresented: $showPermissionDeniedAlert) {
             Button("error_confirm", role: .cancel) {}
@@ -235,4 +265,20 @@ struct SettingsView: View {
             Analytics.track(.lockDisabled)
         }
     }
+}
+
+// MARK: - 공유 시트 (CSV 내보내기)
+
+extension URL: @retroactive Identifiable {
+    public var id: String { absoluteString }
+}
+
+struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }

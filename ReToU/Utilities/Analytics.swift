@@ -19,6 +19,8 @@ enum AnalyticsEvent: String {
     case reminderDisabled = "reminder_disabled"
     case lockEnabled = "lock_enabled"
     case lockDisabled = "lock_disabled"
+    case csvExported = "csv_exported"
+    case pastTodayViewed = "past_today_viewed"
 }
 
 protocol AnalyticsBackend {

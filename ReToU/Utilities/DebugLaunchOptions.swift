@@ -58,6 +58,24 @@ enum DebugLaunchOptions {
             sampleIndex += 1
             _ = storage.add(content: sample.1, emotion: sample.0.rawValue, date: date)
         }
+
+        // "지난 오늘" 검증용 — 작년 같은 날짜에 기록 하나
+        if let lastYear = calendar.date(byAdding: .year, value: -1, to: today) {
+            _ = storage.add(
+                content: "일 년 전의 나도 오늘을 기록하고 있었다. 신기한 기분.",
+                emotion: EmotionType.happy.rawValue,
+                date: lastYear
+            )
+        }
+
+        // -SeedToday 1: 오늘 기록까지 채워 완료 상태 확인
+        if UserDefaults.standard.bool(forKey: "SeedToday") {
+            _ = storage.add(
+                content: "드디어 v2.1 기능이 들어갔다. 지난 오늘을 다시 만나는 날.",
+                emotion: EmotionType.happy.rawValue,
+                date: today
+            )
+        }
     }
 }
 #endif
