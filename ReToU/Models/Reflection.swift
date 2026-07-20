@@ -9,14 +9,15 @@ import SwiftData
 
 @Model
 final class Reflection {
-    var id: UUID
-    var date: Date
-    var emotion: String
-    var content: String
-    var order: Int
-    var createdAt: Date
-    var updatedAt: Date
-    
+    // CloudKit 동기화 요건: 모든 속성은 기본값을 가져야 함
+    var id: UUID = UUID()
+    var date: Date = Date()
+    var emotion: String = ""
+    var content: String = ""
+    var order: Int = 0
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
+
     init(date: Date, emotion: String, content: String, order: Int = 0) {
         self.id = UUID()
         self.date = date

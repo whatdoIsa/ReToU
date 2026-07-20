@@ -46,6 +46,10 @@
 "settings_lock_toggle" = "Lock diary";
 "settings_lock_subtitle" = "Face ID + 6-digit passcode";
 "settings_change_pin" = "Change passcode";
+"settings_section_backup" = "Backup";
+"settings_icloud_title" = "iCloud Backup";
+"settings_icloud_on" = "Backed up automatically with this device's Apple Account. Your records survive a new phone.";
+"settings_icloud_off" = "iCloud is unavailable, so records stay on this device only. Sign in to iCloud in the Settings app.";
 "settings_section_about" = "About";
 "settings_version" = "Version";
 "settings_privacy_note" = "Everything stays on this device only";

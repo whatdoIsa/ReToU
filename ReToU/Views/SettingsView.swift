@@ -96,6 +96,30 @@ struct SettingsView: View {
                             }
                         }
 
+                        // MARK: 백업
+                        section("settings_section_backup") {
+                            HStack(alignment: .top) {
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text("settings_icloud_title")
+                                        .font(AppFont.label(14, weight: .bold))
+                                        .foregroundColor(AppColor.ink)
+                                    Text(DataContainer.shared.isCloudSyncEnabled
+                                         ? "settings_icloud_on"
+                                         : "settings_icloud_off")
+                                        .font(AppFont.label(11, weight: .medium))
+                                        .foregroundColor(AppColor.inkFaint)
+                                }
+                                Spacer()
+                                Image(systemName: DataContainer.shared.isCloudSyncEnabled
+                                      ? "checkmark.icloud"
+                                      : "icloud.slash")
+                                    .font(.system(size: 17, weight: .medium))
+                                    .foregroundColor(DataContainer.shared.isCloudSyncEnabled
+                                                     ? AppColor.ink
+                                                     : AppColor.inkFaint)
+                            }
+                        }
+
                         // MARK: 정보
                         section("settings_section_about") {
                             HStack {
