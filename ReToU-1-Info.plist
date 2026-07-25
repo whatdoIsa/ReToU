@@ -5,6 +5,10 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>BMYEONSUNG_otf.otf</string>
+		<string>NanumMyeongjo-Regular.ttf</string>
+		<string>NanumMyeongjo-ExtraBold.ttf</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>

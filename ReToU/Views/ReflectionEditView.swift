@@ -2,117 +2,110 @@
 //  ReflectionEditView.swift
 //  ReToU
 //
-//  Created by Dean_SSONG on 4/20/25.
+//  회고 수정 — 그때의 마음을 다시 담는다
 //
 
 import SwiftUI
 
-
-
 struct ReflectionEditView: View {
-    @Binding var reflection: Reflection
+    let reflection: Reflection
     @EnvironmentObject var storage: ReflectionStorage
-    @State private var selectedEmotion: EmotionType
+    @State private var selectedEmotion: EmotionType?
     @State private var reflectionText: String
     @Environment(\.dismiss) var dismiss
+    @State private var saveErrorMessage: String?
 
-    init(reflection: Binding<Reflection>) {
-        self._reflection = reflection
-        _selectedEmotion = State(initialValue: EmotionType(rawValue: reflection.wrappedValue.emotion) ?? .happy)
-        _reflectionText = State(initialValue: reflection.wrappedValue.content)
+    init(reflection: Reflection) {
+        self.reflection = reflection
+        _selectedEmotion = State(initialValue: EmotionType(rawValue: reflection.emotion) ?? .happy)
+        _reflectionText = State(initialValue: reflection.content)
+    }
+
+    private var canSubmit: Bool {
+        selectedEmotion != nil
+            && !reflectionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     var body: some View {
-        //네비게이션 스택 내에 스크롤이 가능한 뷰를 구성
-        ZStack(alignment: .topTrailing){
-            NavigationStack {
-                ScrollView {
-                    VStack(spacing: 28) {
-                        Text("edit_title")
-                            .font(.custom("BMYEONSUNG-OTF", size: 40))
-                            .foregroundColor(.black.opacity(0.7))
-                        
-                        
-                        Text(reflection.date.formattedDate())
-                            .font(.custom("BMYEONSUNG-OTF", size: 26))
-                            .foregroundColor(.black)
-                        
-                        emotionPicker
-                        
-                        TextEditor(text: $reflectionText)
-                            .frame(height: 200)
-                            .padding()
-                            .background(Color(hex: "#FFF9EC"))
-                            .foregroundColor(.black)
-                            .cornerRadius(12)
-                            .padding(.horizontal)
-                            .colorScheme(.light) // 강제 라이트모드 적용
-                        
-                        Button(action: {
-                            let trimmedText = reflectionText.trimmingCharacters(in: .whitespacesAndNewlines)
-                            guard !trimmedText.isEmpty else { return }
-                            
-                            storage.update(reflection: reflection, content: trimmedText, emotion: selectedEmotion.rawValue)
-                            dismiss()
-                        }) {
-                            submitButton
-                        }
-                        .padding(.horizontal)
-                        .frame(width: 240, height: 54)
-                        .disabled(selectedEmotion == nil)
+        ZStack {
+            AppColor.paper.ignoresSafeArea()
+            PaperGrain().ignoresSafeArea()
+
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Text("edit_title")
+                        .font(AppFont.serif(24, relativeTo: .title))
+                        .foregroundColor(AppColor.ink)
+                    Spacer()
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(AppColor.inkFaint)
                     }
-                    .padding(.top, 60)
-                    .navigationBarBackButtonHidden(true)
+                    .accessibilityLabel("닫기")
                 }
-                .onTapGesture {
-                    UIApplication.shared.endEditing()
+                .padding(.top, 12)
+
+                Text(reflection.date.formattedDate() + " " + KoreanLiteraryDate.weekdayName(reflection.date))
+                    .font(AppFont.label(12, weight: .bold))
+                    .foregroundColor(AppColor.inkFaint)
+                    .padding(.top, 4)
+
+                EmotionSealPicker(selection: $selectedEmotion)
+                    .padding(.top, 20)
+
+                Divider()
+                    .overlay(AppColor.hairline)
+                    .padding(.top, 16)
+
+                ZStack(alignment: .topLeading) {
+                    RuledPaper(lineSpacing: 30)
+                    TextEditor(text: $reflectionText)
+                        .font(AppFont.serifBody(15, relativeTo: .body))
+                        .lineSpacing(9)
+                        .foregroundColor(AppColor.ink)
+                        .scrollContentBackground(.hidden)
+                        .background(Color.clear)
                 }
-                .background(Color(hex: "#FFF9EC").ignoresSafeArea())
+                .frame(maxHeight: .infinity)
+
+                Button(action: submit) {
+                    Text("edit_button")
+                }
+                .buttonStyle(InkButtonStyle(
+                    background: canSubmit ? AppColor.ink : AppColor.ink.opacity(0.35)
+                ))
+                .disabled(!canSubmit)
+                .padding(.vertical, 12)
             }
-            Button(action: {
-                dismiss()
-            }) {
-                Image(systemName: "xmark")
-                    .foregroundColor(.gray)
-                    .padding(10)
-                    .background(Color.gray.opacity(0.2))
-                    .clipShape(Circle())
-            }
-            .padding()
+            .padding(.horizontal, 22)
+            .onTapGesture { UIApplication.shared.endEditing() }
+        }
+        .navigationBarBackButtonHidden(true)
+        .alert("error_title", isPresented: .init(
+            get: { saveErrorMessage != nil },
+            set: { if !$0 { saveErrorMessage = nil } }
+        )) {
+            Button("error_confirm", role: .cancel) {}
+        } message: {
+            Text(saveErrorMessage ?? "")
         }
     }
-    
-    var submitButton: some View {
-        Text("edit_button")
-            .font(.custom("BMYEONSUNG-OTF", size: 22))
-            .foregroundColor(.white)
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color(hex: "#4ECFD8"))
-            .cornerRadius(25)
-    }
 
-    var emotionPicker: some View {
-        HStack(spacing: 10) {
-            ForEach(EmotionType.allCases) { emotion in
-                emotionButton(for: emotion)
-            }
+    private func submit() {
+        guard let emotion = selectedEmotion else { return }
+        let trimmedText = reflectionText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedText.isEmpty else { return }
+
+        switch storage.update(reflection: reflection, content: trimmedText, emotion: emotion.rawValue) {
+        case .success:
+            Analytics.track(.reflectionEdited)
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            dismiss()
+        case .failure(let error):
+            saveErrorMessage = error.userFriendlyMessage
         }
-    }
-
-    @ViewBuilder
-    func emotionButton(for emotion: EmotionType) -> some View {
-        let isSelected = selectedEmotion == emotion
-        Text(emotion.rawValue)
-            .font(.title3)
-            .padding(12)
-            .background(isSelected ? Color(hex: "#FF8977") : Color.white)
-            .clipShape(Circle())
-            .overlay(
-                Circle().stroke(Color.gray.opacity(0.3))
-            )
-            .onTapGesture {
-                selectedEmotion = emotion
-            }
     }
 }

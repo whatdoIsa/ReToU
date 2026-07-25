@@ -11,9 +11,72 @@
 "launch_subtitle" = "A time to honestly reflect on your day";
 "passwords" = "Enter the passwords";
 "enter_passwords" = "Enter";
+"auth_failed_title" = "Authentication Failed";
+"auth_failed_message" = "Authentication is required to protect your reflections.";
+"auth_retry" = "Try Again";
+
+//Lock & PIN
+"lock_unlock" = "Unlock";
+"lock_use_faceid" = "Use Face ID";
+"pin_enter" = "Enter your passcode";
+"pin_enter_new" = "Enter a new 6-digit passcode";
+"pin_confirm" = "Enter it once more";
+"pin_wrong" = "Passcodes don't match. Try again";
+
+//Onboarding
+"onboarding_concept_title" = "Once a day,\nlike a stamp";
+"onboarding_concept_body" = "Pick today's feeling, leave a line,\nand the day gets its seal.\nJust once a day — that's what makes it precious.";
+"onboarding_next" = "Next";
+"onboarding_reminder_title" = "Want a gentle\nreminder?";
+"onboarding_reminder_body" = "A quiet nudge at your chosen time.\nNever on days you've already stamped.";
+"onboarding_reminder_enable" = "Remind me at this time";
+"onboarding_skip" = "Maybe later";
+"onboarding_lock_title" = "Lock your\ndiary?";
+"onboarding_lock_body" = "Face ID plus a 6-digit passcode —\nonly you can open it.\nYou can change this anytime in Settings.";
+"onboarding_lock_enable" = "Set up lock";
+"onboarding_start" = "Start without lock";
+
+//Settings
+"settings_title" = "Settings";
+"settings_section_reminder" = "Reminder";
+"settings_reminder_toggle" = "Daily reminder";
+"settings_reminder_subtitle" = "Never sent on days you've already written";
+"settings_reminder_time" = "Time";
+"settings_section_lock" = "Lock";
+"settings_lock_toggle" = "Lock diary";
+"settings_lock_subtitle" = "Face ID + 6-digit passcode";
+"settings_change_pin" = "Change passcode";
+"settings_section_backup" = "Backup";
+"settings_icloud_title" = "iCloud Backup";
+"settings_icloud_on" = "Backed up automatically with this device's Apple Account. Your records survive a new phone.";
+"settings_icloud_off" = "iCloud is unavailable, so records stay on this device only. Sign in to iCloud in the Settings app.";
+"settings_section_data" = "Data";
+"settings_export_csv" = "Export as CSV";
+"settings_export_subtitle" = "Save or share all your records as a file";
+"settings_section_about" = "About";
+"settings_version" = "Version";
+"settings_privacy_note" = "Everything stays on this device only";
+"settings_notification_denied_title" = "Notifications are off";
+"settings_notification_denied_message" = "Allow them in Settings > Today's You > Notifications.";
+
+//Reminder notification
+"reminder_title" = "Today's You";
+"reminder_body" = "Today's stamp is still waiting. One line is enough.";
+
+//Tabs
+"tab_today" = "Today";
+"tab_records" = "Records";
+"tab_mind" = "Mind";
 
 //Write
 "write_title" = "How are you today?";
+"today_done_title" = "Today's you,\nremembered";
+"prompt_change" = "New question ↺";
+"prompt_1" = "The moment that stayed with you today,";
+"prompt_2" = "If you could say one thing to yourself today,";
+"prompt_3" = "The moment you felt most grateful today,";
+"prompt_4" = "A feeling you'd like to let go of today,";
+"prompt_5" = "Words you'd like to leave for tomorrow's you,";
 "write_date_format" = "MMMM d, yyyy";
 "write_example_1" = "e.g.) How was your day?";
 "write_example_2" = "e.g.) Was there anything hard or happy today?";
@@ -23,6 +86,12 @@
 
 //List
 "list_title" = "You of that day";
+"list_empty_title" = "No memories for this month yet";
+"list_empty_subtitle" = "Leave a line about how you feel today";
+
+//Error
+"error_title" = "Something went wrong";
+"error_confirm" = "OK";
 
 
 //Detail
@@ -48,6 +117,27 @@
 "emotion_feedback_neutral" = "You’ve had calm, neutral days.\n It might help to track small emotional shifts.";
 "emotion_feedback_sad" = "You’ve had many sad days.\n Talking to someone may help lighten your heart.";
 "emotion_feedback_angry" = "You’ve felt angry quite often.\n Finding a way to release stress might help.";
+"emotion_feedback_empty" = "Not enough reflections this month yet.";
+
+//Mind
+"mind_letter_title" = "To you, this month";
+"mind_letter_signature" = "— from Today's You";
+"mind_privacy_note" = "Analyzed on your device only · never sent anywhere";
+"mind_empty_title" = "No feelings recorded this month yet";
+
+//Stamped day
+"stamped_happy" = "A day stamped happy";
+"stamped_tired" = "A day stamped tired";
+"stamped_neutral" = "A day stamped neutral";
+"stamped_sad" = "A day stamped sad";
+"stamped_angry" = "A day stamped angry";
+
+//Emotion (accessibility)
+"emotion_happy" = "Happy";
+"emotion_tired" = "Tired";
+"emotion_neutral" = "Neutral";
+"emotion_sad" = "Sad";
+"emotion_angry" = "Angry";
 
 //PickerSheet
 "years" = "years";

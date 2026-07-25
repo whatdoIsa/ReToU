@@ -5,10 +5,26 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Reflection: Identifiable, Codable {
-    let id: UUID = UUID()
-    let date: Date
-    let emotion: String
-    let content: String
+@Model
+final class Reflection {
+    // CloudKit 동기화 요건: 모든 속성은 기본값을 가져야 함
+    var id: UUID = UUID()
+    var date: Date = Date()
+    var emotion: String = ""
+    var content: String = ""
+    var order: Int = 0
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
+
+    init(date: Date, emotion: String, content: String, order: Int = 0) {
+        self.id = UUID()
+        self.date = date
+        self.emotion = emotion
+        self.content = content
+        self.order = order
+        self.createdAt = Date()
+        self.updatedAt = Date()
+    }
 }
