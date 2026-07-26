@@ -74,11 +74,15 @@ struct RecordsView: View {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline) {
-            (Text(KoreanLiteraryDate.yearPhrase(selectedYear) + " ")
-                .foregroundColor(AppColor.ink)
-             + Text(KoreanLiteraryDate.monthName(selectedMonth))
-                .foregroundColor(AppColor.sealRed))
-                .font(AppFont.serif(24, relativeTo: .title))
+            // 주 표기는 누구나 바로 읽는 "7월", 우리말 달 이름은 작은 부제로
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text("\(selectedMonth)월")
+                    .font(AppFont.serif(24, relativeTo: .title))
+                    .foregroundColor(AppColor.sealRed)
+                Text(KoreanLiteraryDate.folkMonthName(selectedMonth))
+                    .font(AppFont.serifBody(12, relativeTo: .caption))
+                    .foregroundColor(AppColor.inkFaint)
+            }
 
             Spacer()
 
@@ -104,9 +108,11 @@ struct RecordsView: View {
 
     private var countLine: some View {
         let stamped = storage.reflections.count
-        return (Text("\(elapsedDays)일 중 ")
-            + Text("\(stamped)번").fontWeight(.heavy).foregroundColor(AppColor.ink)
-            + Text(" 찍었어요"))
+        return (Text("\(String(selectedYear))년 \(selectedMonth)월 · ")
+            + Text("\(KoreanLiteraryDate.nativeCount(elapsedDays)) 날 중 ")
+            + Text(stamped > 0 ? "\(KoreanLiteraryDate.nativeCount(stamped)) 번" : "0번")
+                .fontWeight(.heavy).foregroundColor(AppColor.ink)
+            + Text(" 새겼어요"))
             .font(AppFont.label(11, weight: .semibold))
             .foregroundColor(AppColor.inkFaint)
             .padding(.top, 4)

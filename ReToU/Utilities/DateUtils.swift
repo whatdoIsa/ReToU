@@ -46,10 +46,28 @@ enum KoreanLiteraryDate {
 
     private static let sinoDigits = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"]
 
+    /// 우리말 달 이름 — 헤더의 작은 부제로 사용 (주 표기는 숫자/한자어)
+    private static let folkMonthNames = [
+        "해오름달", "시샘달", "물오름달", "잎새달", "푸른달", "누리달",
+        "견우직녀달", "타오름달", "열매달", "하늘연달", "미틈달", "매듭달"
+    ]
+
     /// 7 → "칠월"
     static func monthName(_ month: Int) -> String {
         guard (1...12).contains(month) else { return "\(month)월" }
         return monthNames[month - 1]
+    }
+
+    /// 7 → "견우직녀달"
+    static func folkMonthName(_ month: Int) -> String {
+        guard (1...12).contains(month) else { return "" }
+        return folkMonthNames[month - 1]
+    }
+
+    /// 6 → "여섯" (조각보의 "여섯 날" 등 수량 표기)
+    static func nativeCount(_ n: Int) -> String {
+        guard (1...31).contains(n) else { return "\(n)" }
+        return nativeNumbers[n - 1]
     }
 
     /// 19 → "열아홉 번째 날"

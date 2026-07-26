@@ -16,39 +16,39 @@ enum EmotionType: String, CaseIterable, Identifiable, Codable {
     
     var id: String { rawValue }
 
-    /// VoiceOver 등 접근성에서 읽어줄 감정 이름
+    /// 감정 이름 — 기쁨·고단·덤덤·슬픔·분노
     var accessibilityName: String {
         switch self {
-        case .happy: return String(localized: "emotion_happy", defaultValue: "행복")
-        case .tired: return String(localized: "emotion_tired", defaultValue: "피곤")
-        case .neutral: return String(localized: "emotion_neutral", defaultValue: "보통")
+        case .happy: return String(localized: "emotion_happy", defaultValue: "기쁨")
+        case .tired: return String(localized: "emotion_tired", defaultValue: "고단")
+        case .neutral: return String(localized: "emotion_neutral", defaultValue: "덤덤")
         case .sad: return String(localized: "emotion_sad", defaultValue: "슬픔")
-        case .angry: return String(localized: "emotion_angry", defaultValue: "화남")
+        case .angry: return String(localized: "emotion_angry", defaultValue: "분노")
         }
     }
 
-    /// 인장(도장) 색상 — 채도를 낮춘 인주의 물성
+    /// 인장(도장) 색상 — 전통 안료: 치자·자초·갈매·쪽·연지
     var sealColor: Color {
         switch self {
-        case .happy: return Color(hex: "#D99A3E")
-        case .tired: return Color(hex: "#8F7FA8")
-        case .neutral: return Color(hex: "#7D8F6D")
-        case .sad: return Color(hex: "#5F7F9E")
-        case .angry: return Color(hex: "#C34A36")
+        case .happy: return Color(hex: "#C99A3F")   // 치자
+        case .tired: return Color(hex: "#8A79A0")   // 자초
+        case .neutral: return Color(hex: "#6E8267") // 갈매
+        case .sad: return Color(hex: "#4E6C8D")     // 쪽
+        case .angry: return Color(hex: "#B04A3C")   // 연지
         }
     }
 
     /// 통계 차트용 감정별 색상 (인장 색과 동일 체계)
     var color: Color { sealColor }
 
-    /// 상세 화면의 "○○을 찍은 날" 라벨
+    /// 상세 화면의 "○○을 새긴 날" 라벨
     var stampedDayLabel: String {
         switch self {
-        case .happy: return String(localized: "stamped_happy", defaultValue: "행복을 찍은 날")
-        case .tired: return String(localized: "stamped_tired", defaultValue: "피곤을 찍은 날")
-        case .neutral: return String(localized: "stamped_neutral", defaultValue: "보통을 찍은 날")
-        case .sad: return String(localized: "stamped_sad", defaultValue: "슬픔을 찍은 날")
-        case .angry: return String(localized: "stamped_angry", defaultValue: "화남을 찍은 날")
+        case .happy: return String(localized: "stamped_happy", defaultValue: "기쁨을 새긴 날")
+        case .tired: return String(localized: "stamped_tired", defaultValue: "고단을 새긴 날")
+        case .neutral: return String(localized: "stamped_neutral", defaultValue: "덤덤을 새긴 날")
+        case .sad: return String(localized: "stamped_sad", defaultValue: "슬픔을 새긴 날")
+        case .angry: return String(localized: "stamped_angry", defaultValue: "분노를 새긴 날")
         }
     }
 }

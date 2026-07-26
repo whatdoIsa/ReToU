@@ -58,17 +58,6 @@ struct ReflectionDetailView: View {
                         .accessibilityLabel("닫기")
                         .padding(.top, 8)
 
-                        HStack(spacing: 9) {
-                            EmotionSealView(
-                                emotion: emotion, style: .stamped, size: 38,
-                                rotationSeed: reflection.dateKey.hashValue
-                            )
-                            Text(emotion.stampedDayLabel)
-                                .font(AppFont.label(11, weight: .bold))
-                                .foregroundColor(emotion.sealColor)
-                        }
-                        .padding(.top, 18)
-
                         ScrollView(showsIndicators: false) {
                             ZStack(alignment: .topLeading) {
                                 RuledPaper(lineSpacing: 30)
@@ -81,6 +70,24 @@ struct ReflectionDetailView: View {
                             }
                         }
                         .padding(.top, 16)
+
+                        // 낙관(落款) — 글 끝에 그날의 인장, 서명 옆엔 작은 날짜
+                        HStack(alignment: .bottom, spacing: 8) {
+                            Spacer()
+                            Text(numericDate)
+                                .font(AppFont.label(10, weight: .medium))
+                                .foregroundColor(AppColor.inkFaint)
+                                .monospacedDigit()
+                                .padding(.bottom, 4)
+                            EmotionSealView(
+                                emotion: emotion, style: .stamped, size: 40,
+                                rotationSeed: reflection.dateKey.hashValue
+                            )
+                        }
+                        .padding(.trailing, 6)
+                        .padding(.top, 6)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("\(emotion.stampedDayLabel), \(numericDate)")
 
                         HStack(spacing: 22) {
                             Button {
@@ -146,8 +153,13 @@ struct ReflectionDetailView: View {
     }
 
     private var verticalSubText: String {
-        let year = Calendar.current.component(.year, from: reflection.date)
-        return "\(KoreanLiteraryDate.yearPhrase(year)) \(KoreanLiteraryDate.weekdayName(reflection.date))"
+        let month = Calendar.current.component(.month, from: reflection.date)
+        return "\(emotion.stampedDayLabel) · \(KoreanLiteraryDate.folkMonthName(month))"
+    }
+
+    private var numericDate: String {
+        let c = Calendar.current
+        return "\(c.component(.year, from: reflection.date)). \(c.component(.month, from: reflection.date)). \(c.component(.day, from: reflection.date))"
     }
 
     private func underlined(_ key: LocalizedStringKey, color: Color) -> some View {

@@ -76,7 +76,7 @@ struct TodayView: View {
                     .foregroundColor(AppColor.inkFaint)
                 Spacer()
                 if let days = storage.daysTogether() {
-                    Text("함께한 \(days)일째")
+                    Text("함께 걸어온 \(days)날")
                         .font(AppFont.label(11, weight: .bold))
                         .foregroundColor(AppColor.sealRed)
                 }
@@ -154,7 +154,7 @@ struct TodayView: View {
                     .foregroundColor(AppColor.inkFaint)
                 Spacer()
                 if let days = storage.daysTogether() {
-                    Text("함께한 \(days)일째")
+                    Text("함께 걸어온 \(days)날")
                         .font(AppFont.label(11, weight: .bold))
                         .foregroundColor(AppColor.sealRed)
                 }
