@@ -64,6 +64,7 @@ struct RecordsView: View {
                 ledgerList
             }
             .padding(.horizontal, 22)
+            .contentColumn()
         }
         .onAppear { reload() }
         .sheet(item: $selectedReflection) { reflection in

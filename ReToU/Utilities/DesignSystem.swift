@@ -191,6 +191,14 @@ struct TornRectShape: Shape {
     }
 }
 
+extension View {
+    /// iPad에서 콘텐츠가 종이 한 장의 폭을 넘지 않도록 제한 (iPhone에는 영향 없음)
+    func contentColumn(maxWidth: CGFloat = 640) -> some View {
+        self.frame(maxWidth: maxWidth)
+            .frame(maxWidth: .infinity)
+    }
+}
+
 /// 결정적 난수 — 같은 시드는 항상 같은 결과 (인장 각도·그레인에 사용)
 struct SeededRandom {
     private var state: UInt64

@@ -140,6 +140,7 @@ struct TodayView: View {
             .padding(.bottom, 8)
         }
         .padding(.horizontal, 22)
+        .contentColumn()
         .onTapGesture { UIApplication.shared.endEditing() }
     }
 
@@ -235,6 +236,7 @@ struct TodayView: View {
             .padding(.bottom, 14)
         }
         .padding(.horizontal, 22)
+        .contentColumn()
         .sheet(isPresented: $isEditingToday, onDismiss: { refresh() }) {
             if let reflection = todayReflection {
                 ReflectionEditView(reflection: reflection)
