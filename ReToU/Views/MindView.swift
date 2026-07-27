@@ -79,6 +79,7 @@ struct MindView: View {
                 Spacer(minLength: 0)
             }
             .padding(.horizontal, 22)
+            .contentColumn()
         }
         .onAppear { currentDate = Date() }
     }

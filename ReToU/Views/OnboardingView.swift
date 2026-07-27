@@ -21,9 +21,9 @@ struct OnboardingView: View {
 
             VStack(spacing: 0) {
                 TabView(selection: $page) {
-                    conceptPage.tag(0)
-                    reminderPage.tag(1)
-                    lockPage.tag(2)
+                    conceptPage.contentColumn(maxWidth: 560).tag(0)
+                    reminderPage.contentColumn(maxWidth: 560).tag(1)
+                    lockPage.contentColumn(maxWidth: 560).tag(2)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
 

@@ -170,6 +170,7 @@ struct SettingsView: View {
                 }
             }
             .padding(.horizontal, 22)
+            .contentColumn()
         }
         .sheet(isPresented: $showPinSetup) {
             PinPadView(mode: .setup) { success in

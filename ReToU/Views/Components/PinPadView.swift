@@ -81,6 +81,7 @@ struct PinPadView: View {
             }
             .padding(.bottom, 40)
         }
+        .contentColumn(maxWidth: 480)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppColor.paper.ignoresSafeArea())
     }
