@@ -50,7 +50,8 @@ struct MindView: View {
             VStack(alignment: .leading, spacing: 0) {
                 header
 
-                Text("\(totalCount)번의 기록으로 그려졌어요")
+                (Text("\(String(year))년 \(month)월 · ")
+                 + Text("\(KoreanLiteraryDate.nativeCount(totalCount)) 번의 새김으로 지어졌어요"))
                     .font(AppFont.label(11, weight: .semibold))
                     .foregroundColor(AppColor.inkFaint)
                     .padding(.top, 4)
@@ -58,12 +59,18 @@ struct MindView: View {
                 if totalCount == 0 {
                     emptyState
                 } else {
-                    distribution
-                        .padding(.top, 20)
+                    JogakboView(entries: sortedSummary)
+                        .frame(height: sortedSummary.count > 2 ? 158 : 96)
+                        .padding(.top, 16)
+
+                    Text("한 달의 마음을 이어 붙인 조각보 — 조각의 크기가 곧 날수예요")
+                        .font(AppFont.label(10, weight: .medium))
+                        .foregroundColor(AppColor.inkFaint)
+                        .padding(.top, 8)
 
                     Divider()
                         .overlay(AppColor.hairline)
-                        .padding(.top, 20)
+                        .padding(.top, 16)
 
                     letter
                         .padding(.top, 16)
@@ -78,7 +85,7 @@ struct MindView: View {
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline) {
-            Text("\(KoreanLiteraryDate.monthName(month))의 마음")
+            Text("\(KoreanLiteraryDate.monthName(month))의 마음결")
                 .font(AppFont.serif(24, relativeTo: .title))
                 .foregroundColor(AppColor.ink)
 
@@ -115,35 +122,7 @@ struct MindView: View {
         }
     }
 
-    private var distribution: some View {
-        VStack(spacing: 10) {
-            ForEach(sortedSummary, id: \.emotion) { entry in
-                HStack(spacing: 10) {
-                    EmotionSealView(emotion: entry.emotion, style: .outline, size: 22)
-                    Text(entry.emotion.accessibilityName)
-                        .font(AppFont.label(12, weight: .bold))
-                        .foregroundColor(AppColor.ink)
-                        .frame(width: 30, alignment: .leading)
-
-                    GeometryReader { geo in
-                        InkButtonShape()
-                            .fill(entry.emotion.sealColor)
-                            .frame(width: max(14, geo.size.width * CGFloat(entry.count) / CGFloat(maxCount)), height: 10)
-                            .frame(maxHeight: .infinity, alignment: .center)
-                    }
-
-                    Text("\(entry.count)일")
-                        .font(AppFont.label(12, weight: .medium))
-                        .foregroundColor(AppColor.inkSecondary)
-                        .monospacedDigit()
-                        .frame(width: 32, alignment: .trailing)
-                }
-                .frame(height: 24)
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel("\(entry.emotion.accessibilityName) \(entry.count)일")
-            }
-        }
-    }
+    // (조각보 뷰로 대체됨 — JogakboView)
 
     private var letter: some View {
         let (dominant, message) = storage.dominantEmotionMessage(forYear: year, month: month)
@@ -176,7 +155,7 @@ struct MindView: View {
         guard let dominant, let count = summary[dominant] else { return message }
         let opening = String(
             localized: "mind_letter_opening",
-            defaultValue: "이번 달엔 \(dominant.accessibilityName) 도장을 \(count)번 찍었어요."
+            defaultValue: "이번 달 조각보에서 가장 넓은 조각은 \(dominant.accessibilityName), \(KoreanLiteraryDate.nativeCount(count)) 날이에요."
         )
         return opening + "\n" + message
     }

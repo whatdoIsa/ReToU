@@ -65,8 +65,8 @@
 
 //Tabs
 "tab_today" = "오늘";
-"tab_records" = "기록";
-"tab_mind" = "마음";
+"tab_records" = "자취";
+"tab_mind" = "마음결";
 
 //Write
 "write_title" = "오늘의 넌 어때?";
@@ -82,7 +82,7 @@
 "write_example_2" = "예시) 오늘 힘들었거나 행복했던 일이 있었나요?";
 "write_example_answer_1" = "코드에 오류가 너무 많아서 찾는데 오래 걸렸어요";
 "write_example_answer_2" = "여행을 가서 너무 설레요!!";
-"write_button" = "오늘을 기억하기";
+"write_button" = "오늘을 새기기";
 
 //List
 "list_title" = "그날의 너";
@@ -101,7 +101,7 @@
 
 //Edit
 "edit_title" = "그때의 너";
-"edit_button" = "이대로 기억하기";
+"edit_button" = "이대로 새기기";
 
 //Delete
 "delete_alert_title" = "정말 그날을 놓아줄까요?";
@@ -112,7 +112,7 @@
 //Chart
 "chart_title" = "yyyy년 M월";
 "emotion_feedback_happy" = "기쁜 감정이 많았어요.\n 행복한 순간을 자주 기록해보세요!";
-"emotion_feedback_tired" = "피곤한 날이 많았어요.\n 충분한 휴식을 취해보는 건 어떨까요?";
+"emotion_feedback_tired" = "고단한 날이 많았어요.\n 충분한 휴식을 취해보는 건 어떨까요?";
 "emotion_feedback_neutral" = "담담한 하루들이 있었네요.\n 감정의 변화를 기록해보는 것도 좋아요.";
 "emotion_feedback_sad" = "슬픈 날이 많았어요.\n 마음을 나눌 누군가와 대화를 해보세요.";
 "emotion_feedback_angry" = "화가 났던 날이 많네요.\n 스트레스 해소 방법을 찾아보면 도움이 될 거예요!";
@@ -125,18 +125,18 @@
 "mind_empty_title" = "아직 이 달의 마음이 없어요";
 
 //Stamped day (상세)
-"stamped_happy" = "행복을 찍은 날";
-"stamped_tired" = "피곤을 찍은 날";
-"stamped_neutral" = "보통을 찍은 날";
-"stamped_sad" = "슬픔을 찍은 날";
-"stamped_angry" = "화남을 찍은 날";
+"stamped_happy" = "기쁨을 새긴 날";
+"stamped_tired" = "고단을 새긴 날";
+"stamped_neutral" = "덤덤을 새긴 날";
+"stamped_sad" = "슬픔을 새긴 날";
+"stamped_angry" = "분노를 새긴 날";
 
 //Emotion (접근성)
-"emotion_happy" = "행복";
-"emotion_tired" = "피곤";
-"emotion_neutral" = "보통";
+"emotion_happy" = "기쁨";
+"emotion_tired" = "고단";
+"emotion_neutral" = "덤덤";
 "emotion_sad" = "슬픔";
-"emotion_angry" = "화남";
+"emotion_angry" = "분노";
 
 //PickerSheet
 "years" = "년도";
