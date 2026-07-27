@@ -46,7 +46,7 @@ final class SwiftDataReflectionRepository: ObservableObject {
                 existingReflection.content = trimmedContent
                 existingReflection.updatedAt = Date()
                 resultReflection = existingReflection
-                print("✅ Updated existing reflection for \(dateKey)")
+                print("Updated existing reflection for \(dateKey)")
             } else {
                 // 생성 경로: 새로운 회고 추가
                 let newOrder = getNextOrder()
@@ -58,7 +58,7 @@ final class SwiftDataReflectionRepository: ObservableObject {
                 )
                 modelContext.insert(newReflection)
                 resultReflection = newReflection
-                print("✅ Created new reflection for \(dateKey) with order \(newOrder)")
+                print("Created new reflection for \(dateKey) with order \(newOrder)")
             }
             
             try modelContext.save()
@@ -77,7 +77,7 @@ final class SwiftDataReflectionRepository: ObservableObject {
             
             // 삭제 후 순서 재정렬
             try reorderReflections()
-            print("✅ Deleted reflection and reordered remaining reflections")
+            print("Deleted reflection and reordered remaining reflections")
             
             return .success(())
         } catch {
@@ -107,7 +107,7 @@ final class SwiftDataReflectionRepository: ObservableObject {
             try modelContext.save()
             
             let dateKey = dateManager.generateDateKey(for: reflection.date)
-            print("✅ Updated reflection for \(dateKey)")
+            print("Updated reflection for \(dateKey)")
             
             return .success(reflection)
         } catch {
@@ -120,7 +120,7 @@ final class SwiftDataReflectionRepository: ObservableObject {
     /// 특정 년월의 회고 조회
     func fetchReflections(forYear year: Int, month: Int) -> Result<[Reflection], ReflectionError> {
         guard let dateRange = dateManager.dateRange(for: year, month: month) else {
-            print("❌ Invalid date range for \(year)-\(month)")
+            print("Invalid date range for \(year)-\(month)")
             return .success([])
         }
         
@@ -164,7 +164,7 @@ final class SwiftDataReflectionRepository: ObservableObject {
         do {
             return try fetchReflection(onSameDayAs: Date())
         } catch {
-            print("❌ Error fetching today's reflection: \(error)")
+            print("Error fetching today's reflection: \(error)")
             return nil
         }
     }
@@ -203,7 +203,7 @@ final class SwiftDataReflectionRepository: ObservableObject {
             fetchRequest.fetchLimit = 1
             return try modelContext.fetch(fetchRequest).first?.date
         } catch {
-            print("❌ Error fetching first reflection date: \(error)")
+            print("Error fetching first reflection date: \(error)")
             return nil
         }
     }
@@ -256,7 +256,7 @@ final class SwiftDataReflectionRepository: ObservableObject {
             let lastReflection = try modelContext.fetch(fetchRequest).first
             return (lastReflection?.order ?? -1) + 1
         } catch {
-            print("❌ Error getting next order: \(error)")
+            print("Error getting next order: \(error)")
             return 0
         }
     }
