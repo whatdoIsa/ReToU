@@ -14,3 +14,7 @@ xcuserdata/
 
 # Mac
 .DS_Store
+# AI tooling & local artifacts
+.claude/
+claudedocs/
+CLAUDE.md
